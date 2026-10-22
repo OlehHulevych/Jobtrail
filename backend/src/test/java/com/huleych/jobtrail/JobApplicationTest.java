@@ -2,8 +2,11 @@ package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,4 +55,23 @@ public class JobApplicationTest {
         assertNull(jobApplication.getUrl());
         assertNull(jobApplication.getJobDescription());
     }
+
+    @Test
+    public void shouldSetStatusAndAppliedAtWhenApplying(){
+        jobApplication.apply(LocalDate.now());
+        assertEquals(ApplicationStatus.APPLIED, jobApplication.getStatus());
+        assertEquals(LocalDate.now(),jobApplication.getAppliedAt());
+    }
+    @Test
+    public void shouldRejectNullApplyDate(){
+        assertThrows(IllegalArgumentException.class, ()->jobApplication.apply(null));
+    }
+    @Test
+    public void shouldRejectApplyingTwice(){
+        assertThrows(InvalidStatusTransitionException.class, ()->{
+            jobApplication.apply(LocalDate.now());
+            jobApplication.apply(LocalDate.now());
+        });
+    }
+
 }

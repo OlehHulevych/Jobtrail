@@ -43,7 +43,7 @@ public class JobApplication extends BaseEntity {
     }
 
     public void apply(LocalDate today){
-        if(today==null) throw new IllegalArgumentException("Time of appplying is required");
+        if(today==null) throw new IllegalArgumentException("Time of applying is required");
         changeStatus(ApplicationStatus.APPLIED);
         appliedAt = today;
     }
