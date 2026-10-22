@@ -139,6 +139,39 @@ public class JobApplicationTest {
         assertEquals(ApplicationStatus.WITHDRAWN, jobApplication.getStatus());
     }
 
+    @Test
+    public void shouldChangeAllDetailsWhenEditing(){
+        jobApplication.editDetails("Globex", "Backend Engineer", "https://globex.example/careers/42", "Design REST APIs and own the database layer"  );
+        assertEquals("Globex",jobApplication.getCompany());
+        assertEquals("Backend Engineer",jobApplication.getPosition());
+        assertEquals("https://globex.example/careers/42",jobApplication.getUrl());
+        assertEquals("Design REST APIs and own the database layer", jobApplication.getJobDescription());
+    }
+
+    @Test
+    public void shouldRejectBlankCompanyWhenEditing (){
+        assertThrows(IllegalArgumentException.class, ()->{
+            jobApplication.editDetails("", "Backend Engineer", "https://globex.example/careers/42", "Design REST APIs and own the database layer"  );
+
+        });
+    }
+    @Test
+    public void shouldRejectBlankPositionWhenEditing(){
+        assertThrows(IllegalArgumentException.class, ()->{
+            jobApplication.editDetails("Globex", "", "https://globex.example/careers/42", "Design REST APIs and own the database layer"  );
+
+        });
+    }
+    @Test
+    public void shouldKeepOldUrlWhenNewUrlIsNull (){
+        jobApplication.editDetails("Globex", "Backend Engineer", null,"Design REST APIs and own the database layer"  );
+        assertEquals("https://acme.example/jobs/1", jobApplication.getUrl());
+    }
+    @Test
+    public void shouldKeepOldDescriptionWhenNewOneIsBlank(){
+        jobApplication.editDetails("Globex", "Backend Engineer", "https://globex.example/careers/42",null  );
+        assertEquals("Build backend services with Spring Boot", jobApplication.getJobDescription());
+    }
 
 
 }
