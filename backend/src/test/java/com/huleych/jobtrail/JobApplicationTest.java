@@ -74,4 +74,71 @@ public class JobApplicationTest {
         });
     }
 
+    @Test
+    public void shouldMoveFromAppliedToInterview(){
+        jobApplication.apply(LocalDate.now());
+        jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        assertEquals(ApplicationStatus.INTERVIEW, jobApplication.getStatus());
+    }
+    @Test
+    public void shouldAllowInterviewToInterview (){
+        jobApplication.apply(LocalDate.now());
+        jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        assertEquals(ApplicationStatus.INTERVIEW, jobApplication.getStatus());
+    }
+    @Test
+    public void shouldMoveFromInterviewToOffer(){
+        jobApplication.apply(LocalDate.now());
+        jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        jobApplication.moveTo(ApplicationStatus.OFFER);
+        assertEquals(ApplicationStatus.OFFER, jobApplication.getStatus());
+    }
+    @Test
+    public void shouldRejectMoveToApplied (){
+        assertThrows(InvalidStatusTransitionException.class, ()->{
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+            jobApplication.apply(LocalDate.now());
+        });
+
+    }
+    @Test
+    public void shouldRejectNullStatus(){
+        assertThrows(IllegalArgumentException.class, ()->{
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(null);
+        });
+
+    }
+    @Test
+    public void shouldRejectTransitionFromWishlistToInterview(){
+        assertThrows(InvalidStatusTransitionException.class, ()->{
+            jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        });
+    }
+    @Test
+    public void shouldRejectTransitionFromRejectedToInterview (){
+        assertThrows(InvalidStatusTransitionException.class, ()->{
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(ApplicationStatus.REJECTED);
+            jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        });
+    }
+    @Test
+    public void shouldRejectAnyTransitionFromOffer(){
+        assertThrows(InvalidStatusTransitionException.class, ()->{
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(ApplicationStatus.OFFER);
+            jobApplication.moveTo(ApplicationStatus.INTERVIEW);
+        });
+    }
+    @Test
+    public void shouldAllowWithdrawFromWishlist(){
+        jobApplication.moveTo(ApplicationStatus.WITHDRAWN);
+        assertEquals(ApplicationStatus.WITHDRAWN, jobApplication.getStatus());
+    }
+
+
+
 }
