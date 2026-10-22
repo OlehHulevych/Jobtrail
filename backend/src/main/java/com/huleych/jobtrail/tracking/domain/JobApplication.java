@@ -1,8 +1,9 @@
 package com.huleych.jobtrail.tracking.domain;
 
+import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import jakarta.persistence.*;
 
-import java.time.Clock;
+
 import java.time.LocalDate;
 
 
@@ -18,12 +19,12 @@ public class JobApplication extends BaseEntity {
     private String company;
     @Column(nullable = false)
     private String position;
-    private String url = null;
+    private String url;
     @Column(columnDefinition = "text")
-    private String jobDescription = null;
+    private String jobDescription;
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
-    private LocalDate appliedAt = null;
+    private LocalDate appliedAt;
 
     protected JobApplication(){
 
@@ -37,79 +38,35 @@ public class JobApplication extends BaseEntity {
         this.company = company;
         this.position = position;
         status = ApplicationStatus.WISHLIST;
-        if(url!=null) this.url = url;
-        if(jobDescription!=null) this.jobDescription = jobDescription;
-
-
+        this.url = url;
+        this.jobDescription = jobDescription;
     }
-
-
 
     public void apply(LocalDate today){
-        if(today==null) throw new IllegalArgumentException("Clock is required");
-        if(status == ApplicationStatus.WISHLIST) {
-            setStatus(ApplicationStatus.APPLIED);
-            appliedAt = today;
-        }
-        else{
-            throw new IllegalArgumentException("Can't apply application.Cannot change status of application");
-        }
-    }
-
-    public void scheduleInterview(){
-        if(status==ApplicationStatus.INTERVIEW || status == ApplicationStatus.APPLIED) {
-            setStatus(ApplicationStatus.INTERVIEW);
-        }
-        else{
-            throw new IllegalArgumentException("Can't schedule interview");
-        }
-    }
-
-    public void offer(){
-        if(status==ApplicationStatus.INTERVIEW || status == ApplicationStatus.APPLIED) {
-            setStatus(ApplicationStatus.OFFER);
-        }
-        else{
-            throw new IllegalArgumentException("Can't give offer");
-        }
-    }
-    public void reject(){
-        if(status==ApplicationStatus.INTERVIEW || status == ApplicationStatus.APPLIED) {
-            setStatus(ApplicationStatus.REJECTED);
-        }
-        else{
-            throw new IllegalArgumentException("Can't reject application");
-        }
-    }
-    public void withdraw(){
-        if(status==ApplicationStatus.INTERVIEW || status == ApplicationStatus.APPLIED || status == ApplicationStatus.WISHLIST) {
-            setStatus(ApplicationStatus.WITHDRAWN);
-        }
-        else{
-            throw new IllegalArgumentException("Can't withdraw application");
-        }
+        if(today==null) throw new IllegalArgumentException("Time of appplying is required");
+        changeStatus(ApplicationStatus.APPLIED);
+        appliedAt = today;
     }
 
     public void editDetails(String company, String position, String url, String jobDescription){
-       this.company = company==null || company.isBlank()?this.company:company;
-       this.position = position==null || position.isBlank()?this.position:position;
-       this.url = url==null || url.isBlank()?this.url:url;
-       this.jobDescription = jobDescription==null || jobDescription.isBlank()?this.jobDescription:jobDescription;
-
+        if(company==null || company.isBlank()) throw new IllegalArgumentException("company is required");
+        if(position==null || position.isBlank()) throw new IllegalArgumentException("position is required");
+        this.position = position;
+        this.company = company;
+        if(url!=null && !url.isBlank()) this.url = url;
+        if(jobDescription!=null && !jobDescription.isBlank())this.jobDescription = jobDescription;
     }
 
-    private void setStatus(ApplicationStatus status){
-        if(status!=null){
-            this.status = status;
-        }
-        else {
-            throw new IllegalArgumentException("Status is required!");
-        }
-
+    public void moveTo(ApplicationStatus status){
+        if(status==ApplicationStatus.APPLIED) throw new IllegalArgumentException("Cannot change status to Applied");
+        changeStatus(status);
     }
 
-
-
+    private void changeStatus(ApplicationStatus status){
+        if(status==null) throw new IllegalArgumentException("Status is required");
+        if(!this.status.canTransferTo(status)) throw new InvalidStatusTransitionException(this.status, status);
+        this.status = status;
+    }
 
     public String getCompany() {
         return company;
@@ -138,6 +95,4 @@ public class JobApplication extends BaseEntity {
     public Long getOwnerId() {
         return ownerId;
     }
-
-
 }
