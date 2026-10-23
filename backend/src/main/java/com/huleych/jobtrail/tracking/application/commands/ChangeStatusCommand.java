@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.tracking.application;
+package com.huleych.jobtrail.tracking.application.commands;
 
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 
