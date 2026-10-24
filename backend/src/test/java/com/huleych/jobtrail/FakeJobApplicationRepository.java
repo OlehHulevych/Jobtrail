@@ -15,8 +15,11 @@ public class FakeJobApplicationRepository implements JobApplicationRepository {
     }
     @Override
     public JobApplication save(JobApplication jobApplication) {
-        Optional<JobApplication> application = findById(jobApplication.getId());
-        if(application.isEmpty()) throw new IllegalArgumentException("Application is already existing");
+        JobApplication application = storage.stream()
+                .filter(a-> Objects.equals(a.getOwnerId(), jobApplication
+                        .getOwnerId()) && Objects.equals(a.getPosition(), jobApplication.getPosition()) && Objects.equals(a.getCompany(),
+                        jobApplication.getCompany())).findFirst().orElse(null);
+        if(application!=null) throw new IllegalArgumentException("Application is already existing");
         storage.add(jobApplication);
         return jobApplication;
     }
