@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SpringDataJobApplicationRepository extends JpaRepository<JobApplication, Long> {
-    List<JobApplication> findAllByOwnerId(Long ownerId);
-    List<JobApplication> findAllByOwnerIdAndStatus(Long ownerId, ApplicationStatus status);
+    List<JobApplication> findAllByOwnerIdOrderByCreatedAtDesc(Long ownerId);
+    List<JobApplication> findAllByOwnerIdAndStatusOrderByCreatedAtDesc(Long ownerId, ApplicationStatus status);
 }

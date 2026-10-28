@@ -23,12 +23,12 @@ public class JpaJobApplicationRepository implements JobApplicationRepository {
 
     @Override
     public List<JobApplication> findAllByOwnerId(Long ownerId) {
-        return repository.findAllByOwnerId(ownerId);
+        return repository.findAllByOwnerIdOrderByCreatedAtDesc(ownerId);
     }
 
     @Override
     public List<JobApplication> findAllByOwnerIdAndStatus(Long ownerId, ApplicationStatus status) {
-        return repository.findAllByOwnerIdAndStatus(ownerId,status);
+        return repository.findAllByOwnerIdAndStatusOrderByCreatedAtDesc(ownerId,status);
     }
 
     @Override
