@@ -16,8 +16,9 @@ public class ListApplications {
         this.repository = repository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<JobApplication> execute(ListApplicationsQuery query){
+
         if(query==null) throw new IllegalArgumentException("Query is required");
         if(query.status()==null){
             return repository.findAllByOwnerId(query.ownerId());
