@@ -20,6 +20,7 @@ public class ListApplications {
     public List<JobApplication> execute(ListApplicationsQuery query){
 
         if(query==null) throw new IllegalArgumentException("Query is required");
+        if(query.ownerId()==null) throw new IllegalArgumentException("owner id is required");
         if(query.status()==null){
             return repository.findAllByOwnerId(query.ownerId());
         }
