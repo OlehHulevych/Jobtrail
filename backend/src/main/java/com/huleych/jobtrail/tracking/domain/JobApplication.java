@@ -1,18 +1,17 @@
 package com.huleych.jobtrail.tracking.domain;
 
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
+import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFound;
 import jakarta.persistence.*;
-
-
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 @Entity
 @Table(name = "job_applications")
 public class JobApplication extends BaseEntity {
-
-
-
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;
     @Column(nullable = false)
@@ -24,6 +23,8 @@ public class JobApplication extends BaseEntity {
     private String jobDescription;
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+    @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Note> notes = new ArrayList<Note>();
     private LocalDate appliedAt;
 
     protected JobApplication(){
@@ -95,4 +96,26 @@ public class JobApplication extends BaseEntity {
     public Long getOwnerId() {
         return ownerId;
     }
+
+
+    public void addNote(String value){
+        if(status==ApplicationStatus.WITHDRAWN||status==ApplicationStatus.REJECTED){
+            throw new IllegalStateException("Invalid status of application");
+        }
+        Note note = new Note(value, this);
+        notes.add(note);
+    }
+
+    public void deleteNote(Long id){
+         if(status== ApplicationStatus.REJECTED || status==ApplicationStatus.WITHDRAWN) throw new IllegalStateException("Invalid staus to perform action");
+         if(id==null) throw new IllegalArgumentException("note's id is required");
+         Note note = notes.stream().filter(n-> Objects.equals(n.getId(), id)).findFirst().orElse(null);
+         if(note==null) throw new ResourceNotFound(Note.class.getName(), id);
+         notes.remove(note);
+    }
+
+    public List<Note> getNotes(){
+        return List.copyOf(notes);
+    }
+
 }
