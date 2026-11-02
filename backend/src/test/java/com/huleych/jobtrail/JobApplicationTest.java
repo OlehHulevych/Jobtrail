@@ -4,6 +4,7 @@ import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,8 +12,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JobApplicationTest {
-    private String company = "Acme";
-    private String position = "Java Developer";
     JobApplication jobApplication;
 
 
@@ -29,7 +28,9 @@ public class JobApplicationTest {
     public void shouldStoreOwnerCompanyAndPositionWhenCreated(){
 
         assertEquals(1L,jobApplication.getOwnerId());
+        String company = "Acme";
         assertEquals(company,jobApplication.getCompany());
+        String position = "Java Developer";
         assertEquals(position,jobApplication.getPosition());
 
     }
@@ -171,6 +172,73 @@ public class JobApplicationTest {
     public void shouldKeepOldDescriptionWhenNewOneIsBlank(){
         jobApplication.editDetails("Globex", "Backend Engineer", "https://globex.example/careers/42",null  );
         assertEquals("Build backend services with Spring Boot", jobApplication.getJobDescription());
+    }
+
+    @Nested
+    class AddNote{
+        private JobApplication nestedJobApplication;
+
+        @BeforeEach
+        public void init(){
+            nestedJobApplication = new JobApplication(5L, "Acme", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot");
+        }
+
+        @Test
+        public void  shouldAddNoteToNewApplication(){
+            nestedJobApplication.addNote("Prepare to HR interview");
+            assertEquals(1, nestedJobApplication.getNotes().size());
+        }
+
+        @Test
+        public void shouldTrimNoteText(){
+            nestedJobApplication.addNote("   Prepare to HR interview   ");
+            assertEquals("Prepare to HR interview", nestedJobApplication.getNotes().getFirst().getValue());
+        }
+
+
+        @Test
+        public void shouldRejectNullNoteText(){
+            assertThrows(IllegalArgumentException.class, ()-> nestedJobApplication.addNote(null));
+        }
+
+        @Test
+        public void shouldRejectBlankNoteText(){
+            assertThrows(IllegalArgumentException.class, ()-> nestedJobApplication.addNote(" "));
+        }
+
+        @Test
+        public void shouldAllowDuplicateNotes(){
+            nestedJobApplication.addNote("Prepare to HR interview");
+            nestedJobApplication.addNote("Prepare to HR interview");
+            assertEquals(2, nestedJobApplication.getNotes().size());
+        }
+
+        @Test
+        public void shouldKeepNotesInInsertionOrder(){
+            nestedJobApplication.addNote("Prepare to HR interview");
+            nestedJobApplication.addNote("Prepare to Technical Interview");
+            assertEquals("Prepare to HR interview", nestedJobApplication.getNotes().get(0).getValue());
+            assertEquals("Prepare to Technical Interview", nestedJobApplication.getNotes().get(1).getValue());
+        }
+
+        @Test
+        public void shouldAllowNotesInAllowedStatuses(){
+            nestedJobApplication.apply(LocalDate.now());
+            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
+            nestedJobApplication.moveTo(ApplicationStatus.INTERVIEW);
+            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
+            nestedJobApplication.moveTo(ApplicationStatus.OFFER);
+            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
+        }
+
+        @Test
+        public void shouldRejectNoteWhenRejected(){
+            nestedJobApplication.apply(LocalDate.now());
+            nestedJobApplication.moveTo(ApplicationStatus.REJECTED);
+            assertThrows(IllegalStateException.class, ()->nestedJobApplication.addNote("Prepare to Interview"));
+
+        }
+
     }
 
 
