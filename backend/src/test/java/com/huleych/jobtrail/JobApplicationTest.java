@@ -6,6 +6,10 @@ import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionEx
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
 
@@ -176,70 +180,80 @@ public class JobApplicationTest {
 
     @Nested
     class AddNote{
-        private JobApplication nestedJobApplication;
-
-        @BeforeEach
-        public void init(){
-            nestedJobApplication = new JobApplication(5L, "Acme", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot");
-        }
-
         @Test
         public void  shouldAddNoteToNewApplication(){
-            nestedJobApplication.addNote("Prepare to HR interview");
-            assertEquals(1, nestedJobApplication.getNotes().size());
+            jobApplication.addNote("Prepare to HR interview");
+            assertEquals(1, jobApplication.getNotes().size());
         }
 
         @Test
         public void shouldTrimNoteText(){
-            nestedJobApplication.addNote("   Prepare to HR interview   ");
-            assertEquals("Prepare to HR interview", nestedJobApplication.getNotes().getFirst().getValue());
+            jobApplication.addNote("   Prepare to HR interview   ");
+            assertEquals("Prepare to HR interview", jobApplication.getNotes().getFirst().getValue());
         }
 
 
         @Test
         public void shouldRejectNullNoteText(){
-            assertThrows(IllegalArgumentException.class, ()-> nestedJobApplication.addNote(null));
+            assertThrows(IllegalArgumentException.class, ()-> jobApplication.addNote(null));
         }
 
-        @Test
-        public void shouldRejectBlankNoteText(){
-            assertThrows(IllegalArgumentException.class, ()-> nestedJobApplication.addNote(" "));
+        @ParameterizedTest
+        @ValueSource(strings = {"", " ", "\t"})
+        public void shouldRejectBlankNoteText(String text){
+            assertThrows(IllegalArgumentException.class, ()-> jobApplication.addNote(text));
         }
 
         @Test
         public void shouldAllowDuplicateNotes(){
-            nestedJobApplication.addNote("Prepare to HR interview");
-            nestedJobApplication.addNote("Prepare to HR interview");
-            assertEquals(2, nestedJobApplication.getNotes().size());
+            jobApplication.addNote("Prepare to HR interview");
+            jobApplication.addNote("Prepare to HR interview");
+            assertEquals(2, jobApplication.getNotes().size());
         }
 
         @Test
         public void shouldKeepNotesInInsertionOrder(){
-            nestedJobApplication.addNote("Prepare to HR interview");
-            nestedJobApplication.addNote("Prepare to Technical Interview");
-            assertEquals("Prepare to HR interview", nestedJobApplication.getNotes().get(0).getValue());
-            assertEquals("Prepare to Technical Interview", nestedJobApplication.getNotes().get(1).getValue());
+            jobApplication.addNote("Prepare to HR interview");
+            jobApplication.addNote("Prepare to Technical Interview");
+            assertEquals("Prepare to HR interview", jobApplication.getNotes().get(0).getValue());
+            assertEquals("Prepare to Technical Interview", jobApplication.getNotes().get(1).getValue());
         }
 
-        @Test
-        public void shouldAllowNotesInAllowedStatuses(){
-            nestedJobApplication.apply(LocalDate.now());
-            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
-            nestedJobApplication.moveTo(ApplicationStatus.INTERVIEW);
-            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
-            nestedJobApplication.moveTo(ApplicationStatus.OFFER);
-            assertDoesNotThrow(()-> nestedJobApplication.addNote("Prepare to HR interview"));
+        @ParameterizedTest
+        @EnumSource(value = ApplicationStatus.class, mode= EnumSource.Mode.EXCLUDE, names = {"REJECTED", "WITHDRAWN"})
+        public void shouldAllowNotesInAllowedStatuses(ApplicationStatus givenStatus){
+            switch (givenStatus){
+                case ApplicationStatus.APPLIED:
+                    jobApplication.apply(LocalDate.now());
+                    break;
+                case ApplicationStatus.WISHLIST:
+                    break;
+                default:
+                    jobApplication.apply(LocalDate.now());
+                    jobApplication.moveTo(givenStatus);
+                    break;
+            }
+            assertEquals(givenStatus, jobApplication.getStatus());
+            assertDoesNotThrow(()-> jobApplication.addNote("Prepare to HR interview"));
+            assertEquals(1, jobApplication.getNotes().size());
         }
 
-        @Test
-        public void shouldRejectNoteWhenRejected(){
-            nestedJobApplication.apply(LocalDate.now());
-            nestedJobApplication.moveTo(ApplicationStatus.REJECTED);
-            assertThrows(IllegalStateException.class, ()->nestedJobApplication.addNote("Prepare to Interview"));
-
+        @ParameterizedTest
+        @EnumSource(value = ApplicationStatus.class, names = {"REJECTED", "WITHDRAWN"})
+        public void shouldRejectNoteWhenRejected(ApplicationStatus givenStatus){
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(givenStatus);
+            assertThrows(IllegalStateException.class, ()->jobApplication.addNote("Prepare to Interview"));
+            assertEquals(0,jobApplication.getNotes().size());
         }
+
+
+
 
     }
+
+
+
 
 
 }
