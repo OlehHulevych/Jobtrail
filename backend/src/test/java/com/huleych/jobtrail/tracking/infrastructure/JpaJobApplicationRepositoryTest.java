@@ -3,6 +3,7 @@ package com.huleych.jobtrail.tracking.infrastructure;
 import com.huleych.jobtrail.support.PostgresContainerConfig;
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.Note;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Test;
@@ -87,8 +88,8 @@ class JpaJobApplicationRepositoryTest {
         List<JobApplication> result = repository.findAllByOwnerIdAndStatus(1L, ApplicationStatus.APPLIED);
 
         assertEquals(1, result.size());
-        assertEquals("Globex", result.get(0).getCompany());
-        assertEquals(ApplicationStatus.APPLIED, result.get(0).getStatus());
+        assertEquals("Globex", result.getFirst().getCompany());
+        assertEquals(ApplicationStatus.APPLIED, result.getFirst().getStatus());
     }
 
     @Test
@@ -144,6 +145,68 @@ class JpaJobApplicationRepositoryTest {
                 .createNativeQuery("insert into job_applications (owner_id, company, position) values (1, null, 'Dev')")
                 .executeUpdate());
     }
+    @Test
+    void shouldPersistAndLoadNotes() {
+        JobApplication application = newApplication(1L, "Acme");
+        application.addNote("Prepare for HR interview");
+        Long id = repository.save(application).getId();
+        flushAndClear();
+
+        JobApplication loaded = repository.findById(id).orElseThrow();
+
+        assertEquals(1, loaded.getNotes().size());
+        assertEquals("Prepare for HR interview", loaded.getNotes().getFirst().getValue());
+    }
+
+    @Test
+    void shouldReturnNotesOrderedByCreationTime() {
+        JobApplication application = newApplication(1L, "Acme");
+        application.addNote("first");
+        application.addNote("second");
+        application.addNote("third");
+        Long id = repository.save(application).getId();
+        entityManager.flush();
+        List<Note> saved = application.getNotes();
+        setNoteCreatedAt(saved.get(0).getId(), LocalDateTime.of(2026, 1, 3, 10, 0));
+        setNoteCreatedAt(saved.get(1).getId(), LocalDateTime.of(2026, 1, 1, 10, 0));
+        setNoteCreatedAt(saved.get(2).getId(), LocalDateTime.of(2026, 1, 2, 10, 0));
+        entityManager.clear();
+
+        List<String> values = repository.findById(id).orElseThrow().getNotes().stream()
+                .map(Note::getValue).toList();
+
+        assertEquals(List.of("second", "third", "first"), values);
+    }
+    @Test
+    void shouldDeleteNoteRowWhenRemovedFromApplication() {
+        JobApplication application = newApplication(1L, "Acme");
+        application.addNote("to delete");
+        Long id = repository.save(application).getId();
+        entityManager.flush();
+        Long noteId = application.getNotes().getFirst().getId();
+        entityManager.clear();
+
+        JobApplication loaded = repository.findById(id).orElseThrow();
+        loaded.deleteNote(noteId);
+        repository.save(loaded);
+        entityManager.flush();
+
+        assertEquals(0L, countNotes(id));
+    }
+
+    private void setNoteCreatedAt(Long id, LocalDateTime createdAt) {
+        entityManager.createNativeQuery("update notes set created_at = ?1 where id = ?2")
+                .setParameter(1, createdAt)
+                .setParameter(2, id)
+                .executeUpdate();
+    }
+
+    private long countNotes(Long applicationId) {
+        return ((Number) entityManager
+                .createNativeQuery("select count(*) from notes where job_application_id = ?1")
+                .setParameter(1, applicationId)
+                .getSingleResult()).longValue();
+    }
 
     private void setCreatedAt(Long id, LocalDateTime createdAt) {
         entityManager.createNativeQuery("update job_applications set created_at = ?1 where id = ?2")
@@ -151,4 +214,6 @@ class JpaJobApplicationRepositoryTest {
                 .setParameter(2, id)
                 .executeUpdate();
     }
+
+
 }
