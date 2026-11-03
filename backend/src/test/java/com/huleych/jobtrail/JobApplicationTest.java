@@ -3,13 +3,14 @@ package com.huleych.jobtrail;
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
+import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.web.client.ResourceAccessException;
+
 
 import java.time.LocalDate;
 
@@ -246,10 +247,32 @@ public class JobApplicationTest {
             assertThrows(IllegalStateException.class, ()->jobApplication.addNote("Prepare to Interview"));
             assertEquals(0,jobApplication.getNotes().size());
         }
+    }
 
+    @Nested
+    class deleteNote{
+        @BeforeEach
+        public void init(){
+            jobApplication.addNote("Prepare to interview");
+        }
 
+        @Test
+        public void shouldRejectNullNoteId(){
+            assertThrows(IllegalArgumentException.class, ()->jobApplication.deleteNote(null));
+        }
 
+        @Test
+        public void shouldThrowResourceNotFoundWhenNoteDoesNotExist(){
+            assertThrows(ResourceNotFound.class, ()->jobApplication.deleteNote(5L));
+        }
 
+        @ParameterizedTest
+        @EnumSource(value = ApplicationStatus.class, names = {"REJECTED", "WITHDRAWN"})
+        public void shouldRejectDeleteWhenLocked(ApplicationStatus givenStatus){
+            jobApplication.apply(LocalDate.now());
+            jobApplication.moveTo(givenStatus);
+            assertThrows(IllegalStateException.class, ()->jobApplication.deleteNote(1L));
+        }
     }
 
 

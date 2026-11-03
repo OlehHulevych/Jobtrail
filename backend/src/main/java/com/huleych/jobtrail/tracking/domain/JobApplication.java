@@ -24,6 +24,7 @@ public class JobApplication extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
     @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt ASC ")
     private List<Note> notes = new ArrayList<Note>();
     private LocalDate appliedAt;
 
