@@ -184,14 +184,59 @@ class JpaJobApplicationRepositoryTest {
         Long id = repository.save(application).getId();
         entityManager.flush();
         Long noteId = application.getNotes().getFirst().getId();
-        entityManager.clear();
+
 
         JobApplication loaded = repository.findById(id).orElseThrow();
         loaded.deleteNote(noteId);
         repository.save(loaded);
         entityManager.flush();
+        entityManager.clear();
+
 
         assertEquals(0L, countNotes(id));
+    }
+
+    @Test
+    void shouldDeleteOnlyTheRequestedNote(){
+        JobApplication application = new JobApplication(1L, "Acme", "Java Developer",
+                "https://acme.example/jobs/1", "Build backend services");
+        application.addNote("to delete");
+        application.addNote("to delete II");
+        Long id = repository.save(application).getId();
+        entityManager.flush();
+        entityManager.clear();
+        Long noteId = application.getNotes().getFirst().getId();
+        JobApplication loaded = repository.findById(id).orElseThrow();
+        loaded.deleteNote(noteId);
+        repository.save(loaded);
+        entityManager.flush();
+        entityManager.clear();
+        JobApplication newLoaded = repository.findById(id).orElseThrow();
+        assertEquals("to delete II",newLoaded.getNotes().getFirst().getValue());
+    }
+
+    @Test
+    void shouldAllowDeleteInOffer(){
+        JobApplication application = new JobApplication(1L, "Acme", "Java Developer",
+                "https://acme.example/jobs/1", "Build backend services");
+        application.apply(LocalDate.now());
+        application.moveTo(ApplicationStatus.OFFER);
+        application.addNote("to delete");
+        Long id = repository.save(application).getId();
+        entityManager.flush();
+        Long noteId = application.getNotes().getFirst().getId();
+        JobApplication loaded = repository.findById(id).orElseThrow();
+        entityManager.flush();
+        entityManager.clear();
+        assertEquals(1, loaded.getNotes().size());
+        assertEquals(ApplicationStatus.OFFER,loaded.getStatus());
+        loaded.deleteNote(noteId);
+        repository.save(loaded);
+        entityManager.flush();
+        entityManager.clear();
+        JobApplication newLoaded = repository.findById(id).orElseThrow();
+        assertEquals(0,newLoaded.getNotes().size());
+
     }
 
     private void setNoteCreatedAt(Long id, LocalDateTime createdAt) {

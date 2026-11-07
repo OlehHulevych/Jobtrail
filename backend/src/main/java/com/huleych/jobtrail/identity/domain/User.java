@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.identity;
+package com.huleych.jobtrail.identity.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -88,5 +88,9 @@ public class User {
 
     public LocalDate getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Email getEmail() {
+        return email;
     }
 }

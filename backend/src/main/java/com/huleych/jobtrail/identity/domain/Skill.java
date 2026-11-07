@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.identity;
+package com.huleych.jobtrail.identity.domain;
 
 import jakarta.persistence.Embeddable;
 
