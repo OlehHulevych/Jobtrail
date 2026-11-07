@@ -10,4 +10,8 @@ public record Password(String value) {
                     "Password must have at least 8 characters, one uppercase letter, one digit and one special symbol");
     }
 
+    @Override
+    public String toString() {
+        return "Password[value=****]";
+    }
 }
