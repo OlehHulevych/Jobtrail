@@ -41,7 +41,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return rawToken;
     }
 
-    static String hash(String rawToken) {
+    @Override
+    public String hash(String rawToken) {
         try {
             byte[] digest = MessageDigest.getInstance("SHA-256").digest(rawToken.getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(digest);
