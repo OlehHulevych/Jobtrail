@@ -5,6 +5,8 @@ import com.huleych.jobtrail.identity.domain.User;
 import com.huleych.jobtrail.identity.domain.UserRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class JpaUserRepository implements UserRepository{
     private final SpringDataUserRepository repository;
@@ -21,5 +23,10 @@ public class JpaUserRepository implements UserRepository{
     @Override
     public boolean existsByEmail(Email email) {
         return repository.existsByEmailValue(email.value());
+    }
+
+    @Override
+    public Optional<User> findByEmail(Email email) {
+        return repository.findByEmailValue(email.value());
     }
 }

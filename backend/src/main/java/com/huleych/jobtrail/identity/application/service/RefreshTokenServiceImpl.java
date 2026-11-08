@@ -6,7 +6,7 @@ import com.huleych.jobtrail.identity.domain.User;
 import com.huleych.jobtrail.identity.infrastructure.JwtProperties;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -22,10 +22,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final JwtProperties properties;
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final Clock clock;
 
-    public RefreshTokenServiceImpl(RefreshTokenRepository repo, JwtProperties props){
+    public RefreshTokenServiceImpl(RefreshTokenRepository repo, JwtProperties props, Clock clock){
         this.refreshTokenRepository = repo;
         this.properties = props;
+        this.clock = clock;
     }
 
 
@@ -34,7 +36,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         byte[] bytes = new byte[32];
         RANDOM.nextBytes(bytes);
         String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        var token = new RefreshToken(user, hash(rawToken), LocalDateTime.now().plusDays(properties.refreshTtl().toDays()));
+        var token = new RefreshToken(user, hash(rawToken), LocalDateTime.now(clock).plus(properties.refreshTtl()));
         refreshTokenRepository.save(token);
         return rawToken;
     }
@@ -50,6 +52,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public boolean isExpired(RefreshToken refreshToken) {
-        return refreshToken.getExpiresAt().isBefore(LocalDateTime.now());
+        return refreshToken.getExpiresAt().isBefore(LocalDateTime.now(clock));
     }
 }

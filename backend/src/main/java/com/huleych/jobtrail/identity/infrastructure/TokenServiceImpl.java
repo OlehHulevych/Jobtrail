@@ -29,7 +29,7 @@ public class TokenServiceImpl implements TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("jobtrail")
                 .subject(String.valueOf(user.getId()))
-                .claim("email", user.getEmail())
+                .claim("email", user.getEmail().value())
                 .issuedAt(now)
                 .expiresAt(now.plus(props.accessTtl()))
                 .build();

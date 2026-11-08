@@ -93,4 +93,8 @@ public class User {
     public Email getEmail() {
         return email;
     }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 }

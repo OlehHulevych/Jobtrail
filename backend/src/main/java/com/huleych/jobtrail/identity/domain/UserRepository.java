@@ -1,8 +1,9 @@
 package com.huleych.jobtrail.identity.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
 public interface UserRepository{
     User save(User user);
     boolean existsByEmail(Email email);
+    Optional<User> findByEmail(Email email);
 }
