@@ -3,7 +3,7 @@ package com.huleych.jobtrail;
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
-import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFound;
+import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -263,7 +263,7 @@ public class JobApplicationTest {
 
         @Test
         public void shouldThrowResourceNotFoundWhenNoteDoesNotExist(){
-            assertThrows(ResourceNotFound.class, ()->jobApplication.deleteNote(5L));
+            assertThrows(ResourceNotFoundException.class, ()->jobApplication.deleteNote(5L));
         }
 
         @ParameterizedTest

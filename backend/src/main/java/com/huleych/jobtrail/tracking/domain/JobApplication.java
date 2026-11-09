@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.tracking.domain;
 
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
-import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFound;
+import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFoundException;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public class JobApplication extends BaseEntity {
          if(status== ApplicationStatus.REJECTED || status==ApplicationStatus.WITHDRAWN) throw new IllegalStateException("Invalid staus to perform action");
          if(id==null) throw new IllegalArgumentException("note's id is required");
          Note note = notes.stream().filter(n-> Objects.equals(n.getId(), id)).findFirst().orElse(null);
-         if(note==null) throw new ResourceNotFound(Note.class.getName(), id);
+         if(note==null) throw new ResourceNotFoundException(Note.class.getName(), id);
          notes.remove(note);
     }
 
