@@ -1,6 +1,9 @@
 package com.huleych.jobtrail.identity.web;
 
+import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.commands.LoginCommand;
 import com.huleych.jobtrail.identity.application.commands.RegisterUserCommand;
+import com.huleych.jobtrail.identity.application.service.LoginUser;
 import com.huleych.jobtrail.identity.application.service.RegisterUser;
 import com.huleych.jobtrail.identity.domain.User;
 import org.springframework.http.HttpStatus;
@@ -14,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final RegisterUser registerUser;
+    private final LoginUser loginUser;
 
-    public AuthController(RegisterUser registerUser) {
+    public AuthController(RegisterUser registerUser, LoginUser loginUser) {
         this.registerUser = registerUser;
+        this.loginUser = loginUser;
     }
 
     @PostMapping("/register")
@@ -24,5 +29,11 @@ public class AuthController {
     public RegisterResponse register(@RequestBody RegisterRequest request) {
         User user = registerUser.execute(new RegisterUserCommand(request.email(), request.password(), null));
         return new RegisterResponse(user.getId(), user.getEmail().value());
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        LoginResult result = loginUser.execute(new LoginCommand(request.email(), request.password()));
+        return new LoginResponse(result.accessToken(), result.refreshToken());
     }
 }
