@@ -2,8 +2,10 @@ package com.huleych.jobtrail.identity.web;
 
 import com.huleych.jobtrail.identity.application.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.LoginCommand;
+import com.huleych.jobtrail.identity.application.commands.RefreshCommand;
 import com.huleych.jobtrail.identity.application.commands.RegisterUserCommand;
 import com.huleych.jobtrail.identity.application.service.LoginUser;
+import com.huleych.jobtrail.identity.application.service.RefreshAccessToken;
 import com.huleych.jobtrail.identity.application.service.RegisterUser;
 import com.huleych.jobtrail.identity.domain.User;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final RegisterUser registerUser;
     private final LoginUser loginUser;
+    private final RefreshAccessToken refreshAccessToken;
 
-    public AuthController(RegisterUser registerUser, LoginUser loginUser) {
+    public AuthController(RegisterUser registerUser, LoginUser loginUser, RefreshAccessToken refreshAccessToken) {
         this.registerUser = registerUser;
         this.loginUser = loginUser;
+        this.refreshAccessToken = refreshAccessToken;
     }
 
     @PostMapping("/register")
@@ -34,6 +38,12 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         LoginResult result = loginUser.execute(new LoginCommand(request.email(), request.password()));
+        return new LoginResponse(result.accessToken(), result.refreshToken());
+    }
+
+    @PostMapping("/refresh")
+    public LoginResponse refresh(@RequestBody RefreshRequest request) {
+        LoginResult result = refreshAccessToken.execute(new RefreshCommand(request.refreshToken()));
         return new LoginResponse(result.accessToken(), result.refreshToken());
     }
 }
