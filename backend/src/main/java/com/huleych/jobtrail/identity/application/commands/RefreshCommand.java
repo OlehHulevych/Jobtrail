@@ -1,4 +1,6 @@
 package com.huleych.jobtrail.identity.application.commands;
 
-public record RefreshCommand(String refreshToken) {
+import jakarta.validation.constraints.NotNull;
+
+public record RefreshCommand(@NotNull String refreshToken) {
 }
