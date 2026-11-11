@@ -51,9 +51,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean isTokenExpired(String token) {
-        Jwt jwtString = decoder.decode(token);
-        assert jwtString.getExpiresAt() != null;
-        return jwtString.getExpiresAt().isBefore(Instant.now());
+        Instant exp = decoder.decode(token).getExpiresAt();
+        return exp == null || exp.isBefore(Instant.now(clock));
     }
 
 

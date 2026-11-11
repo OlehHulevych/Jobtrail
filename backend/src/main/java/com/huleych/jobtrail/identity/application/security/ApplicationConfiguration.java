@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.identity.infrastructure;
+package com.huleych.jobtrail.identity.application.security;
 
 import com.huleych.jobtrail.identity.domain.Email;
 import com.huleych.jobtrail.identity.domain.UserRepository;
