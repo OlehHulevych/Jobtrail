@@ -9,11 +9,9 @@ import com.huleych.jobtrail.identity.application.service.RefreshAccessToken;
 import com.huleych.jobtrail.identity.application.service.RegisterUser;
 import com.huleych.jobtrail.identity.domain.User;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,5 +43,10 @@ public class AuthController {
     public LoginResponse refresh(@RequestBody RefreshRequest request) {
         LoginResult result = refreshAccessToken.execute(new RefreshCommand(request.refreshToken()));
         return new LoginResponse(result.accessToken(), result.refreshToken());
+    }
+
+    @GetMapping("/me")
+    public String me(@AuthenticationPrincipal Jwt jwt){
+        return jwt.getSubject();
     }
 }
