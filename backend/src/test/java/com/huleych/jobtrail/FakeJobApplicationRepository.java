@@ -38,4 +38,9 @@ public class FakeJobApplicationRepository implements JobApplicationRepository {
     public Optional<JobApplication> findById(UUID id) {
         return storage.stream().filter(a -> Objects.equals(a.getId(), id)).findFirst();
     }
+
+    @Override
+    public void delete(JobApplication jobApplication) {
+        storage.remove(jobApplication);
+    }
 }

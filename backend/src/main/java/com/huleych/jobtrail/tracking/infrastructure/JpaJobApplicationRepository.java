@@ -36,4 +36,9 @@ public class JpaJobApplicationRepository implements JobApplicationRepository {
     public Optional<JobApplication> findById(UUID id) {
         return repository.findById(id);
     }
+
+    @Override
+    public void delete(JobApplication jobApplication) {
+        repository.delete(jobApplication);
+    }
 }
