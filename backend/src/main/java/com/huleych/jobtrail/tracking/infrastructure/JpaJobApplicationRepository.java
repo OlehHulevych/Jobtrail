@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class JpaJobApplicationRepository implements JobApplicationRepository {
@@ -22,17 +23,17 @@ public class JpaJobApplicationRepository implements JobApplicationRepository {
     }
 
     @Override
-    public List<JobApplication> findAllByOwnerId(Long ownerId) {
+    public List<JobApplication> findAllByOwnerId(UUID ownerId) {
         return repository.findAllByOwnerIdOrderByCreatedAtDesc(ownerId);
     }
 
     @Override
-    public List<JobApplication> findAllByOwnerIdAndStatus(Long ownerId, ApplicationStatus status) {
+    public List<JobApplication> findAllByOwnerIdAndStatus(UUID ownerId, ApplicationStatus status) {
         return repository.findAllByOwnerIdAndStatusOrderByCreatedAtDesc(ownerId,status);
     }
 
     @Override
-    public Optional<JobApplication> findById(Long id) {
+    public Optional<JobApplication> findById(UUID id) {
         return repository.findById(id);
     }
 }

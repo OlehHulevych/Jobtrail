@@ -2,4 +2,6 @@ package com.huleych.jobtrail.tracking.application.commands;
 
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 
-public record ChangeStatusCommand (Long applicationId,Long ownerId, ApplicationStatus status){ }
+import java.util.UUID;
+
+public record ChangeStatusCommand (UUID applicationId, UUID ownerId, ApplicationStatus status){ }
