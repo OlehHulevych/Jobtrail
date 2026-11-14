@@ -7,13 +7,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Entity
 @Table(name = "job_applications")
 public class JobApplication extends BaseEntity {
     @Column(name = "owner_id", nullable = false)
-    private Long ownerId;
+    private UUID ownerId;
     @Column(nullable = false)
     private String company;
     @Column(nullable = false)
@@ -32,7 +33,7 @@ public class JobApplication extends BaseEntity {
 
     }
 
-    public JobApplication(Long ownerId, String company, String position, String url, String jobDescription){
+    public JobApplication(UUID ownerId, String company, String position, String url, String jobDescription){
         if(ownerId==null ) throw new IllegalArgumentException("Owner is required");
         if(company == null || company.isBlank()) throw new IllegalArgumentException("Company is required");
         if(position == null || position.isBlank()) throw new IllegalArgumentException("Position is required");
@@ -94,7 +95,7 @@ public class JobApplication extends BaseEntity {
         return appliedAt;
     }
 
-    public Long getOwnerId() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
@@ -107,7 +108,7 @@ public class JobApplication extends BaseEntity {
         notes.add(note);
     }
 
-    public void deleteNote(Long id){
+    public void deleteNote(UUID id){
          if(status== ApplicationStatus.REJECTED || status==ApplicationStatus.WITHDRAWN) throw new IllegalStateException("Invalid staus to perform action");
          if(id==null) throw new IllegalArgumentException("note's id is required");
          Note note = notes.stream().filter(n-> Objects.equals(n.getId(), id)).findFirst().orElse(null);

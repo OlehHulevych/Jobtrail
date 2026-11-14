@@ -5,20 +5,21 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @MappedSuperclass
 public class BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    protected UUID id;
     @CreationTimestamp
     protected LocalDateTime createdAt;
     @UpdateTimestamp
     protected LocalDateTime updatedAt;
 
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
     public LocalDateTime getCreatedAt(){
