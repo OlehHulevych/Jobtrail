@@ -13,17 +13,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JobApplicationTest {
+    private static final UUID OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
     JobApplication jobApplication;
 
 
 
     @BeforeEach
     void init() {
-        jobApplication = new JobApplication(1L, "Acme", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot");
+        jobApplication = new JobApplication(OWNER_ID, "Acme", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot");
     }
     @Test
     public void shouldStartInWithListWhenCreated(){
@@ -32,7 +34,7 @@ public class JobApplicationTest {
     @Test
     public void shouldStoreOwnerCompanyAndPositionWhenCreated(){
 
-        assertEquals(1L,jobApplication.getOwnerId());
+        assertEquals(OWNER_ID,jobApplication.getOwnerId());
         String company = "Acme";
         assertEquals(company,jobApplication.getCompany());
         String position = "Java Developer";
@@ -45,19 +47,19 @@ public class JobApplicationTest {
     }
     @Test
     public void shouldRejectNullCompany(){
-        assertThrows(IllegalArgumentException.class, ()->new JobApplication(1L ,null, "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
+        assertThrows(IllegalArgumentException.class, ()->new JobApplication(OWNER_ID ,null, "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
     }
     @Test
     public void shouldRejectBlankCompany(){
-        assertThrows(IllegalArgumentException.class, ()->new JobApplication(1L ," ", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
+        assertThrows(IllegalArgumentException.class, ()->new JobApplication(OWNER_ID ," ", "Java Developer", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
     }
     @Test
     public void shouldRejectBlankPosition(){
-        assertThrows(IllegalArgumentException.class, ()->new JobApplication(1L ,"Acme", " ", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
+        assertThrows(IllegalArgumentException.class, ()->new JobApplication(OWNER_ID ,"Acme", " ", "https://acme.example/jobs/1",  "Build backend services with Spring Boot"));
     }
     @Test
     public void shouldAllowMissingUrlAndDescription(){
-        JobApplication jobApplication = new JobApplication(1L, "Acme", "Java Developer", null,null);
+        JobApplication jobApplication = new JobApplication(OWNER_ID, "Acme", "Java Developer", null,null);
         assertNull(jobApplication.getUrl());
         assertNull(jobApplication.getJobDescription());
     }
@@ -263,7 +265,7 @@ public class JobApplicationTest {
 
         @Test
         public void shouldThrowResourceNotFoundWhenNoteDoesNotExist(){
-            assertThrows(ResourceNotFoundException.class, ()->jobApplication.deleteNote(5L));
+            assertThrows(ResourceNotFoundException.class, ()->jobApplication.deleteNote(UUID.randomUUID()));
         }
 
         @ParameterizedTest
@@ -271,7 +273,7 @@ public class JobApplicationTest {
         public void shouldRejectDeleteWhenLocked(ApplicationStatus givenStatus){
             jobApplication.apply(LocalDate.now());
             jobApplication.moveTo(givenStatus);
-            assertThrows(IllegalStateException.class, ()->jobApplication.deleteNote(1L));
+            assertThrows(IllegalStateException.class, ()->jobApplication.deleteNote(UUID.randomUUID()));
         }
     }
 

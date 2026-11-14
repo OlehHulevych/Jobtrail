@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,13 +26,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class JpaJobApplicationRepositoryTest {
 
     private static final LocalDate APPLIED_DATE = LocalDate.of(2026, 1, 15);
+    private static final UUID OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final UUID OTHER_OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000002");
 
     @Autowired
     JpaJobApplicationRepository repository;
     @Autowired
     EntityManager entityManager;
 
-    private JobApplication newApplication(Long ownerId, String company) {
+    private JobApplication newApplication(UUID ownerId, String company) {
         return new JobApplication(ownerId, company, "Java Developer", null, null);
     }
 
@@ -42,14 +45,14 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldPersistAndLoadAllFields() {
-        JobApplication application = new JobApplication(1L, "Acme", "Java Developer",
+        JobApplication application = new JobApplication(OWNER_ID, "Acme", "Java Developer",
                 "https://acme.example/jobs/1", "Build backend services");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         flushAndClear();
 
         JobApplication loaded = repository.findById(id).orElseThrow();
 
-        assertEquals(1L, loaded.getOwnerId());
+        assertEquals(OWNER_ID, loaded.getOwnerId());
         assertEquals("Acme", loaded.getCompany());
         assertEquals("Java Developer", loaded.getPosition());
         assertEquals("https://acme.example/jobs/1", loaded.getUrl());
@@ -60,17 +63,17 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldReturnEmptyWhenIdDoesNotExist() {
-        assertTrue(repository.findById(999_999L).isEmpty());
+        assertTrue(repository.findById(UUID.randomUUID()).isEmpty());
     }
 
     @Test
     void shouldReturnOnlyApplicationsOfGivenOwner() {
-        repository.save(newApplication(1L, "Acme"));
-        repository.save(newApplication(1L, "Globex"));
-        repository.save(newApplication(2L, "Initech"));
+        repository.save(newApplication(OWNER_ID, "Acme"));
+        repository.save(newApplication(OWNER_ID, "Globex"));
+        repository.save(newApplication(OTHER_OWNER_ID, "Initech"));
         flushAndClear();
 
-        List<JobApplication> result = repository.findAllByOwnerId(1L);
+        List<JobApplication> result = repository.findAllByOwnerId(OWNER_ID);
 
         assertEquals(2, result.size());
         assertEquals(Set.of("Acme", "Globex"),
@@ -79,13 +82,13 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldFilterByStatus() {
-        JobApplication applied = newApplication(1L, "Globex");
+        JobApplication applied = newApplication(OWNER_ID, "Globex");
         applied.apply(APPLIED_DATE);
-        repository.save(newApplication(1L, "Acme"));
+        repository.save(newApplication(OWNER_ID, "Acme"));
         repository.save(applied);
         flushAndClear();
 
-        List<JobApplication> result = repository.findAllByOwnerIdAndStatus(1L, ApplicationStatus.APPLIED);
+        List<JobApplication> result = repository.findAllByOwnerIdAndStatus(OWNER_ID, ApplicationStatus.APPLIED);
 
         assertEquals(1, result.size());
         assertEquals("Globex", result.getFirst().getCompany());
@@ -94,16 +97,16 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldReturnNewestFirst() {
-        Long acme = repository.save(newApplication(1L, "Acme")).getId();
-        Long globex = repository.save(newApplication(1L, "Globex")).getId();
-        Long initech = repository.save(newApplication(1L, "Initech")).getId();
+        UUID acme = repository.save(newApplication(OWNER_ID, "Acme")).getId();
+        UUID globex = repository.save(newApplication(OWNER_ID, "Globex")).getId();
+        UUID initech =repository.save(newApplication(OWNER_ID, "Initech")).getId();
         entityManager.flush();
         setCreatedAt(acme, LocalDateTime.of(2026, 1, 1, 10, 0));
         setCreatedAt(globex, LocalDateTime.of(2026, 1, 3, 10, 0));
         setCreatedAt(initech, LocalDateTime.of(2026, 1, 2, 10, 0));
         entityManager.clear();
 
-        List<String> companies = repository.findAllByOwnerId(1L).stream()
+        List<String> companies = repository.findAllByOwnerId(OWNER_ID).stream()
                 .map(JobApplication::getCompany).toList();
 
         assertEquals(List.of("Globex", "Initech", "Acme"), companies);
@@ -111,9 +114,9 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldStoreStatusAsText() {
-        JobApplication application = newApplication(1L, "Acme");
+        JobApplication application = newApplication(OWNER_ID, "Acme");
         application.apply(APPLIED_DATE);
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         entityManager.flush();
 
         Object rawStatus = entityManager
@@ -126,7 +129,7 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldPersistStatusChange() {
-        Long id = repository.save(newApplication(1L, "Acme")).getId();
+        UUID id =repository.save(newApplication(OWNER_ID, "Acme")).getId();
         flushAndClear();
 
         JobApplication loaded = repository.findById(id).orElseThrow();
@@ -142,14 +145,14 @@ class JpaJobApplicationRepositoryTest {
     @Test
     void shouldRejectRowWithoutCompanyAtDatabaseLevel() {
         assertThrows(PersistenceException.class, () -> entityManager
-                .createNativeQuery("insert into job_applications (owner_id, company, position) values (1, null, 'Dev')")
+                .createNativeQuery("insert into job_applications (id, owner_id, company, position) values (gen_random_uuid(), gen_random_uuid(), null, 'Dev')")
                 .executeUpdate());
     }
     @Test
     void shouldPersistAndLoadNotes() {
-        JobApplication application = newApplication(1L, "Acme");
+        JobApplication application = newApplication(OWNER_ID, "Acme");
         application.addNote("Prepare for HR interview");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         flushAndClear();
 
         JobApplication loaded = repository.findById(id).orElseThrow();
@@ -160,11 +163,11 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldReturnNotesOrderedByCreationTime() {
-        JobApplication application = newApplication(1L, "Acme");
+        JobApplication application = newApplication(OWNER_ID, "Acme");
         application.addNote("first");
         application.addNote("second");
         application.addNote("third");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         entityManager.flush();
         List<Note> saved = application.getNotes();
         setNoteCreatedAt(saved.get(0).getId(), LocalDateTime.of(2026, 1, 3, 10, 0));
@@ -179,11 +182,11 @@ class JpaJobApplicationRepositoryTest {
     }
     @Test
     void shouldDeleteNoteRowWhenRemovedFromApplication() {
-        JobApplication application = newApplication(1L, "Acme");
+        JobApplication application = newApplication(OWNER_ID, "Acme");
         application.addNote("to delete");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         entityManager.flush();
-        Long noteId = application.getNotes().getFirst().getId();
+        UUID noteId =application.getNotes().getFirst().getId();
 
 
         JobApplication loaded = repository.findById(id).orElseThrow();
@@ -198,14 +201,14 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldDeleteOnlyTheRequestedNote(){
-        JobApplication application = new JobApplication(1L, "Acme", "Java Developer",
+        JobApplication application = new JobApplication(OWNER_ID, "Acme", "Java Developer",
                 "https://acme.example/jobs/1", "Build backend services");
         application.addNote("to delete");
         application.addNote("to delete II");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         entityManager.flush();
         entityManager.clear();
-        Long noteId = application.getNotes().getFirst().getId();
+        UUID noteId =application.getNotes().getFirst().getId();
         JobApplication loaded = repository.findById(id).orElseThrow();
         loaded.deleteNote(noteId);
         repository.save(loaded);
@@ -217,14 +220,14 @@ class JpaJobApplicationRepositoryTest {
 
     @Test
     void shouldAllowDeleteInOffer(){
-        JobApplication application = new JobApplication(1L, "Acme", "Java Developer",
+        JobApplication application = new JobApplication(OWNER_ID, "Acme", "Java Developer",
                 "https://acme.example/jobs/1", "Build backend services");
         application.apply(LocalDate.now());
         application.moveTo(ApplicationStatus.OFFER);
         application.addNote("to delete");
-        Long id = repository.save(application).getId();
+        UUID id =repository.save(application).getId();
         entityManager.flush();
-        Long noteId = application.getNotes().getFirst().getId();
+        UUID noteId =application.getNotes().getFirst().getId();
         JobApplication loaded = repository.findById(id).orElseThrow();
         entityManager.flush();
         entityManager.clear();
@@ -239,21 +242,21 @@ class JpaJobApplicationRepositoryTest {
 
     }
 
-    private void setNoteCreatedAt(Long id, LocalDateTime createdAt) {
+    private void setNoteCreatedAt(UUID id, LocalDateTime createdAt) {
         entityManager.createNativeQuery("update notes set created_at = ?1 where id = ?2")
                 .setParameter(1, createdAt)
                 .setParameter(2, id)
                 .executeUpdate();
     }
 
-    private long countNotes(Long applicationId) {
+    private long countNotes(UUID applicationId) {
         return ((Number) entityManager
                 .createNativeQuery("select count(*) from notes where job_application_id = ?1")
                 .setParameter(1, applicationId)
                 .getSingleResult()).longValue();
     }
 
-    private void setCreatedAt(Long id, LocalDateTime createdAt) {
+    private void setCreatedAt(UUID id, LocalDateTime createdAt) {
         entityManager.createNativeQuery("update job_applications set created_at = ?1 where id = ?2")
                 .setParameter(1, createdAt)
                 .setParameter(2, id)

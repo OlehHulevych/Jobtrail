@@ -9,10 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateApplicationTest {
+    private static final UUID OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000005");
     private  FakeJobApplicationRepository repository;
     private  CreateApplication createApplication;
     private Faker faker;
@@ -24,7 +26,7 @@ public class CreateApplicationTest {
     }
     @Test
     public void shouldSaveApplicationWhenCommandIsValid(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
         JobApplication jobApplication = createApplication.execute(command);
         JobApplication storedApplication = repository.storage.getFirst();
         assertEquals(1,repository.storage.size());
@@ -32,7 +34,7 @@ public class CreateApplicationTest {
     }
     @Test
     public void shouldMapAllFieldsFromCommand(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
         JobApplication jobApplication = createApplication.execute(command);
         assertEquals(command.company(),jobApplication.getCompany());
         assertEquals(command.position(),jobApplication.getPosition());
@@ -42,13 +44,13 @@ public class CreateApplicationTest {
     }
     @Test
     public void shouldStartInWishList(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,faker.company().logo().toLowerCase(),faker.job().position(), "google.com", faker.job().keySkills());
         JobApplication jobApplication = createApplication.execute(command);
         assertEquals(ApplicationStatus.WISHLIST, jobApplication.getStatus());
     }
     @Test
     public void shouldAllowMissingUrlAndDescription(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,faker.company().logo().toLowerCase(),faker.job().position(), null, null);
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,faker.company().logo().toLowerCase(),faker.job().position(), null, null);
         JobApplication jobApplication = createApplication.execute(command);
         assertNull(jobApplication.getUrl());
         assertNull(jobApplication.getJobDescription());
@@ -56,13 +58,13 @@ public class CreateApplicationTest {
     }
     @Test
     public void shouldRejectBlankCompany(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,"",faker.job().position(), null, null);
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,"",faker.job().position(), null, null);
         assertThrows(IllegalArgumentException.class, ()->createApplication.execute(command));
 
     }
     @Test
     public void shouldRejectBlankPosition(){
-        CreateApplicationCommand command = new CreateApplicationCommand(5L,faker.company().logo().toLowerCase(),"", null, null);
+        CreateApplicationCommand command = new CreateApplicationCommand(OWNER_ID,faker.company().logo().toLowerCase(),"", null, null);
         assertThrows(IllegalArgumentException.class, ()->createApplication.execute(command));
 
     }

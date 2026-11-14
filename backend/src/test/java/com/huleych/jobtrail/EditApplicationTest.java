@@ -14,12 +14,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EditApplicationTest {
+    private static final UUID OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000005");
+    private static final UUID OTHER_OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000003");
+    private static final UUID APPLICATION_ID = UUID.fromString("00000000-0000-0000-0000-000000000010");
     @Mock
     JobApplicationRepository repository;
     JobApplication jobApplication;
@@ -29,13 +33,13 @@ public class EditApplicationTest {
     @BeforeEach
     public void init(){
         editApplication = new EditApplication(repository);
-        jobApplication = new JobApplication(5L, "Acme", "Java Developer","https://acme.example/jobs/1", "Build backend services with Spring Boot");
+        jobApplication = new JobApplication(OWNER_ID, "Acme", "Java Developer","https://acme.example/jobs/1", "Build backend services with Spring Boot");
     }
 
     @Test
     public void shouldEditDetailsWhenCallerIsOwner(){
-        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(10L, 5L, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
-        when(repository.findById(10L)).thenReturn(Optional.of(jobApplication));
+        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(APPLICATION_ID, OWNER_ID, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
+        when(repository.findById(APPLICATION_ID)).thenReturn(Optional.of(jobApplication));
         editApplication.execute(command);
         verify(repository).save(jobApplication);
         assertEquals("Globex", jobApplication.getCompany());
@@ -45,24 +49,24 @@ public class EditApplicationTest {
 
     @Test
     public void shouldRejectWhenCallerIsNotOwner(){
-        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(10L, 3L, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
-        when(repository.findById(10L)).thenReturn(Optional.of(jobApplication));
+        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(APPLICATION_ID, OTHER_OWNER_ID, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
+        when(repository.findById(APPLICATION_ID)).thenReturn(Optional.of(jobApplication));
         assertThrows(NotApplicationOwnerException.class, ()-> editApplication.execute(command));
         verify(repository, never()).save(any());
     }
 
     @Test
     public void shouldRejectWhenApplicationNotFound(){
-        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(10L, 3L, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
-        when(repository.findById(10L)).thenReturn(Optional.empty());
+        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(APPLICATION_ID, OTHER_OWNER_ID, "Globex", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
+        when(repository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
         assertThrows(ApplicationNotFoundException.class, ()-> editApplication.execute(command));
         verify(repository, never()).save(any());
     }
 
     @Test
     public void shouldRejectBlankCompany(){
-        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(10L, 5L, "", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
-        when(repository.findById(10L)).thenReturn(Optional.of(jobApplication));
+        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(APPLICATION_ID, OWNER_ID, "", "Backend Engineer", "http://php.com", "The most vulnerable language in 2026");
+        when(repository.findById(APPLICATION_ID)).thenReturn(Optional.of(jobApplication));
         assertThrows(IllegalArgumentException.class, ()-> editApplication.execute(command));
         verify(repository, never()).save(any());
     }
@@ -75,8 +79,8 @@ public class EditApplicationTest {
 
     @Test
     public void shouldKeepOldUrlWhenUrlIsNull(){
-        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(10L, 5L, "Globex", "Backend Engineer", null, "The most vulnerable language in 2026");
-        when(repository.findById(10L)).thenReturn(Optional.of(jobApplication));
+        UpdateJobApplicationCommand command = new UpdateJobApplicationCommand(APPLICATION_ID, OWNER_ID, "Globex", "Backend Engineer", null, "The most vulnerable language in 2026");
+        when(repository.findById(APPLICATION_ID)).thenReturn(Optional.of(jobApplication));
         editApplication.execute(command);
         verify(repository).save(jobApplication);
         assertEquals("Globex", jobApplication.getCompany());

@@ -25,17 +25,17 @@ public class FakeJobApplicationRepository implements JobApplicationRepository {
     }
 
     @Override
-    public List<JobApplication> findAllByOwnerId(Long ownerId) {
+    public List<JobApplication> findAllByOwnerId(UUID ownerId) {
         return storage.stream().filter(a-> Objects.equals(a.getOwnerId(), ownerId)).toList();
     }
 
     @Override
-    public List<JobApplication> findAllByOwnerIdAndStatus(Long ownerId, ApplicationStatus status) {
+    public List<JobApplication> findAllByOwnerIdAndStatus(UUID ownerId, ApplicationStatus status) {
         return storage.stream().filter(a-> Objects.equals(a.getOwnerId(), ownerId) && a.getStatus()==status).toList();
     }
 
     @Override
-    public Optional<JobApplication> findById(Long id) {
+    public Optional<JobApplication> findById(UUID id) {
         return storage.stream().filter(a -> Objects.equals(a.getId(), id)).findFirst();
     }
 }
