@@ -242,6 +242,21 @@ class JpaJobApplicationRepositoryTest {
 
     }
 
+    @Test
+    void shouldDeleteApplicationTogetherWithItsNotes() {
+        JobApplication application = newApplication(OWNER_ID, "Acme");
+        application.addNote("first");
+        application.addNote("second");
+        UUID id = repository.save(application).getId();
+        flushAndClear();
+
+        repository.delete(repository.findById(id).orElseThrow());
+        flushAndClear();
+
+        assertTrue(repository.findById(id).isEmpty());
+        assertEquals(0L, countNotes(id));
+    }
+
     private void setNoteCreatedAt(UUID id, LocalDateTime createdAt) {
         entityManager.createNativeQuery("update notes set created_at = ?1 where id = ?2")
                 .setParameter(1, createdAt)

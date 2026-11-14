@@ -2,12 +2,14 @@ package com.huleych.jobtrail.tracking.web;
 
 import com.huleych.jobtrail.identity.domain.User;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;
+import com.huleych.jobtrail.tracking.application.services.DeleteApplicationService;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
 import com.huleych.jobtrail.tracking.application.services.GetApplicationService;
 import com.huleych.jobtrail.tracking.application.services.ListApplicationsService;
 import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +31,20 @@ public class JobApplicationController {
 
     private final ListApplicationsService listApplicationsService;
     private final GetApplicationService getApplicationService;
+    private final DeleteApplicationService deleteApplicationService;
 
-    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService) {
+    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService) {
         this.createApplicationService = createApplicationService;
         this.editApplicationService = editApplicationService;
         this.listApplicationsService = listApplicationsService;
         this.getApplicationService = getApplicationService;
+        this.deleteApplicationService = deleteApplicationService;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        deleteApplicationService.execute(user.getId(), id);
     }
 
     @GetMapping("/{id}")
