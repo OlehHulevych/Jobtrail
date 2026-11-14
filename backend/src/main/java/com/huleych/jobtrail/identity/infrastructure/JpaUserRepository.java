@@ -6,6 +6,7 @@ import com.huleych.jobtrail.identity.domain.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class JpaUserRepository implements UserRepository{
@@ -18,6 +19,11 @@ public class JpaUserRepository implements UserRepository{
     @Override
     public User save(User user) {
         return repository.save(user);
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return repository.existsById(id);
     }
 
     @Override
