@@ -5,6 +5,7 @@ import com.huleych.jobtrail.tracking.application.services.AddNoteService;
 import com.huleych.jobtrail.tracking.application.services.ChangeStatusService;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;
 import com.huleych.jobtrail.tracking.application.services.DeleteApplicationService;
+import com.huleych.jobtrail.tracking.application.services.DeleteNoteService;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
 import com.huleych.jobtrail.tracking.application.services.GetApplicationService;
 import com.huleych.jobtrail.tracking.application.services.ListApplicationsService;
@@ -37,8 +38,9 @@ public class JobApplicationController {
     private final DeleteApplicationService deleteApplicationService;
     private final ChangeStatusService changeStatusService;
     private final AddNoteService addNoteService;
+    private final DeleteNoteService deleteNoteService;
 
-    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService, AddNoteService addNoteService) {
+    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService, AddNoteService addNoteService, DeleteNoteService deleteNoteService) {
         this.createApplicationService = createApplicationService;
         this.editApplicationService = editApplicationService;
         this.listApplicationsService = listApplicationsService;
@@ -46,6 +48,13 @@ public class JobApplicationController {
         this.deleteApplicationService = deleteApplicationService;
         this.changeStatusService = changeStatusService;
         this.addNoteService = addNoteService;
+        this.deleteNoteService = deleteNoteService;
+    }
+
+    @DeleteMapping("/{id}/notes/{noteId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteNote(@AuthenticationPrincipal User user, @PathVariable UUID id, @PathVariable UUID noteId) {
+        deleteNoteService.execute(user.getId(), id, noteId);
     }
 
     @PostMapping("/{id}/notes")
