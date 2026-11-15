@@ -1,6 +1,7 @@
 package com.huleych.jobtrail.tracking.web;
 
 import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.tracking.application.services.AddNoteService;
 import com.huleych.jobtrail.tracking.application.services.ChangeStatusService;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;
 import com.huleych.jobtrail.tracking.application.services.DeleteApplicationService;
@@ -35,14 +36,22 @@ public class JobApplicationController {
     private final GetApplicationService getApplicationService;
     private final DeleteApplicationService deleteApplicationService;
     private final ChangeStatusService changeStatusService;
+    private final AddNoteService addNoteService;
 
-    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService) {
+    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService, AddNoteService addNoteService) {
         this.createApplicationService = createApplicationService;
         this.editApplicationService = editApplicationService;
         this.listApplicationsService = listApplicationsService;
         this.getApplicationService = getApplicationService;
         this.deleteApplicationService = deleteApplicationService;
         this.changeStatusService = changeStatusService;
+        this.addNoteService = addNoteService;
+    }
+
+    @PostMapping("/{id}/notes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public JobApplicationResponse addNote(@AuthenticationPrincipal User user, @PathVariable UUID id, @RequestBody AddNoteRequest request) {
+        return addNoteService.execute(user.getId(), id, request);
     }
 
     @PatchMapping("/{id}/status")
