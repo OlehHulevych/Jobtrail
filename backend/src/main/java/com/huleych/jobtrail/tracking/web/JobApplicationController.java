@@ -1,6 +1,7 @@
 package com.huleych.jobtrail.tracking.web;
 
 import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.tracking.application.services.ChangeStatusService;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;
 import com.huleych.jobtrail.tracking.application.services.DeleteApplicationService;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,13 +34,20 @@ public class JobApplicationController {
     private final ListApplicationsService listApplicationsService;
     private final GetApplicationService getApplicationService;
     private final DeleteApplicationService deleteApplicationService;
+    private final ChangeStatusService changeStatusService;
 
-    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService) {
+    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService) {
         this.createApplicationService = createApplicationService;
         this.editApplicationService = editApplicationService;
         this.listApplicationsService = listApplicationsService;
         this.getApplicationService = getApplicationService;
         this.deleteApplicationService = deleteApplicationService;
+        this.changeStatusService = changeStatusService;
+    }
+
+    @PatchMapping("/{id}/status")
+    public JobApplicationResponse changeStatus(@AuthenticationPrincipal User user, @PathVariable UUID id, @RequestBody ChangeStatusRequest request) {
+        return changeStatusService.execute(user.getId(), id, request);
     }
 
     @DeleteMapping("/{id}")
