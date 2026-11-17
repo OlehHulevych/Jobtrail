@@ -36,6 +36,7 @@ public class LoginUser {
         }
         User user = userRepository.findByEmail(email).orElse(null);
         if(user==null) throw new InvalidCredentialsException();
+        if(user.getPassword()==null) throw new InvalidCredentialsException();
         if(!passwordEncoder.matches(command.password(),user.getPassword())) throw new InvalidCredentialsException();
         String jwtToken = tokenService.createAccessToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user);

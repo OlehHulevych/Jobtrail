@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
     private Email email;
-    @Column(nullable = false)
+    @Column
     private String passwordHash;
     @CreationTimestamp
     private LocalDate createdAt;
@@ -41,7 +41,6 @@ public class User implements UserDetails {
 
     public User(String email, String passwordHash, Set<Skill> skills) {
         if (email == null) throw new IllegalArgumentException("Email is required");
-        if (passwordHash == null) throw new IllegalArgumentException("Password is required");
         this.email = new Email(email);
         this.passwordHash = passwordHash;
         if (skills != null) this.skills.addAll(skills);
