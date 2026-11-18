@@ -1,5 +1,6 @@
 package com.huleych.jobtrail.shared.web;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
+import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
@@ -45,6 +46,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundByEmailException.class)
     public ResponseEntity<String> handleUserNotFoundByEmailException(UserNotFoundByEmailException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(GithubAuthenticationException.class)
+    public ResponseEntity<String> handleGithubAuthenticationException(GithubAuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
