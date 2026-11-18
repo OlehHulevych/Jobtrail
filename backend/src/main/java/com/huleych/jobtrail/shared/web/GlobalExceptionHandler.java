@@ -2,6 +2,7 @@ package com.huleych.jobtrail.shared.web;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
+import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
@@ -38,6 +39,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundByEmailException.class)
+    public ResponseEntity<String> handleUserNotFoundByEmailException(UserNotFoundByEmailException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)

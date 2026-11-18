@@ -1,8 +1,10 @@
 package com.huleych.jobtrail.identity.application.service;
-import com.huleych.jobtrail.identity.application.commands.GoogleRegisterCommand;
+import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.commands.GoogleRegisterRequest;
 import com.huleych.jobtrail.identity.domain.Email;
 import com.huleych.jobtrail.identity.domain.User;
 import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.infrastructure.TokenService;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,13 @@ public class GoogleAuthService {
     private final JwtDecoder googleJwtDecoder;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final RefreshTokenService refreshTokenService;
 
-    public GoogleAuthService(@Qualifier("googleJwtDecoder") JwtDecoder googleJwtDecoder, UserRepository userRepository, TokenService tokenService){
+    public GoogleAuthService(@Qualifier("googleJwtDecoder") JwtDecoder googleJwtDecoder, UserRepository userRepository, TokenService tokenService, RefreshTokenService refreshTokenService){
         this.googleJwtDecoder = googleJwtDecoder;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public Jwt verify(String idToken){
@@ -41,21 +45,23 @@ public class GoogleAuthService {
     }
 
     @Transactional
-    public String login(String idToken){
+    public LoginResult login(String idToken){
         Jwt google = this.verify(idToken);
         String email = google.getClaimAsString("email");
         User user = userRepository.findByEmail(new Email(email)).orElse(null);
         if(user==null) throw new UserNotFoundByEmailException(email);
-        return tokenService.createAccessToken(user);
+        return new LoginResult(tokenService.createAccessToken(user),refreshTokenService.createRefreshToken(user));
     }
 
     @Transactional
-    public User register(GoogleRegisterCommand command){
+    public User register(GoogleRegisterRequest command){
         Jwt google = this.verify(command.idToken());
         String email = google.getClaimAsString("email");
-        User user = new User(email, null, command.skills());
-        userRepository.save(user);
-        return user;
+        User user = userRepository.findByEmail(new Email(email)).orElse(null);
+        if(user!=null) throw new EmailAlreadyTakenException(email);
+        User newUser = new User(email, null, command.skills());
+        userRepository.save(newUser);
+        return newUser;
 
 
     }
