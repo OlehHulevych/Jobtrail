@@ -1,6 +1,7 @@
 package com.huleych.jobtrail.identity.infrastructure;
 
 import com.huleych.jobtrail.identity.domain.User;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -17,7 +18,7 @@ public class TokenServiceImpl implements TokenService {
     private final JwtProperties props;
     private final Clock clock;
 
-    public TokenServiceImpl(JwtEncoder encoder,JwtDecoder decoder, JwtProperties props, Clock clock) {
+    public TokenServiceImpl(JwtEncoder encoder, @Qualifier("jwtDecoder") JwtDecoder decoder, JwtProperties props, Clock clock) {
         this.encoder = encoder;
         this.props = props;
         this.clock = clock;
