@@ -4,17 +4,20 @@ import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationExcep
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class GithubClientImpl implements GithubClient {
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = createRestTemplate();
     private final String clientId;
     private final String clientSecret;
 
@@ -22,8 +25,23 @@ public class GithubClientImpl implements GithubClient {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
+    private static RestTemplate createRestTemplate() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(Duration.ofSeconds(5));
+        requestFactory.setReadTimeout(Duration.ofSeconds(10));
+        return new RestTemplate(requestFactory);
+    }
+
     @Override
     public String fetchVerifiedEmail(String code) {
+        try {
+            return requestVerifiedEmail(code);
+        } catch (RestClientException e) {
+            throw new GithubAuthenticationException("Failed to communicate with GitHub");
+        }
+    }
+
+    private String requestVerifiedEmail(String code) {
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         tokenHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
