@@ -39,6 +39,16 @@ public class JobAnalysis extends BaseEntity {
                        List<String> niceToHaveSkills, List<String> responsibilities, List<String> redFlags) {
         if (applicationId == null) throw new IllegalArgumentException("Application is required");
         this.applicationId = applicationId;
+        assign(summary, seniority, requiredSkills, niceToHaveSkills, responsibilities, redFlags);
+    }
+
+    public void replaceWith(String summary, Seniority seniority, List<String> requiredSkills,
+                            List<String> niceToHaveSkills, List<String> responsibilities, List<String> redFlags) {
+        assign(summary, seniority, requiredSkills, niceToHaveSkills, responsibilities, redFlags);
+    }
+
+    private void assign(String summary, Seniority seniority, List<String> requiredSkills,
+                        List<String> niceToHaveSkills, List<String> responsibilities, List<String> redFlags) {
         this.summary = summary;
         this.seniority = seniority;
         this.requiredSkills = requiredSkills == null ? List.of() : List.copyOf(requiredSkills);

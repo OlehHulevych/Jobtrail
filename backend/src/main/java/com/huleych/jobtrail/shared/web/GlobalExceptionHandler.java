@@ -5,6 +5,7 @@ import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsExcepti
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
+import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
@@ -51,6 +52,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GithubAuthenticationException.class)
     public ResponseEntity<String> handleGithubAuthenticationException(GithubAuthenticationException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    @ExceptionHandler(JobAnalysisFailedException.class)
+    public ResponseEntity<String> handleJobAnalysisFailedException(JobAnalysisFailedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ex.getMessage());
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
