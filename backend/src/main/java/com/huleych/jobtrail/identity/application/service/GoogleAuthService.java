@@ -59,7 +59,8 @@ public class GoogleAuthService {
         String email = google.getClaimAsString("email");
         User user = userRepository.findByEmail(new Email(email)).orElse(null);
         if(user!=null) throw new EmailAlreadyTakenException(email);
-        User newUser = new User(email, null, command.skills());
+        String name = google.getClaimAsString("name");
+        User newUser = new User(name, email, null, command.skills());
         userRepository.save(newUser);
         return newUser;
 

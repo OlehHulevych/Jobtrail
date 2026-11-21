@@ -29,7 +29,7 @@ public class GoogleController {
     @PostMapping("/register")
     public RegisterResponse googleRequest(@Valid @RequestBody GoogleRegisterRequest req){
         User user = googleAuthService.register(req);
-        return new RegisterResponse(user.getId(), user.getEmail().value());
+        return new RegisterResponse(user.getId(), user.getName().value(), user.getEmail().value());
     }
 
 }

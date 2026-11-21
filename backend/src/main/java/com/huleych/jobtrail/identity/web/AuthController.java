@@ -34,8 +34,8 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public RegisterResponse register(@RequestBody RegisterRequest request) {
-        User user = registerUser.execute(new RegisterUserCommand(request.email(), request.password(), null));
-        return new RegisterResponse(user.getId(), user.getEmail().value());
+        User user = registerUser.execute(new RegisterUserCommand(request.name(), request.email(), request.password(), null));
+        return new RegisterResponse(user.getId(), user.getName().value(), user.getEmail().value());
     }
 
     @PostMapping("/login")
