@@ -29,16 +29,17 @@ public class GithubAuthService {
 
     @Transactional
     public User register(GithubRegisterRequest request){
-        var email = githubClient.fetchVerifiedEmail(request.code());
+        var profile = githubClient.fetchProfile(request.code());
+        var email = profile.email();
         if(userRepository.findByEmail(new Email(email)).isPresent()) throw new EmailAlreadyTakenException(email);
-        User newUser = new User(email,null,request.skills());
+        User newUser = new User(profile.name(),email,null,request.skills());
         userRepository.save(newUser);
         return newUser;
     }
 
     @Transactional
     public LoginResult login(String code){
-        var email = githubClient.fetchVerifiedEmail(code);
+        var email = githubClient.fetchProfile(code).email();
         User user = userRepository.findByEmail(new Email(email)).orElse(null);
         if(user==null) throw new UserNotFoundByEmailException(email);
         return new LoginResult(tokenService.createAccessToken(user),refreshTokenService.createRefreshToken(user));

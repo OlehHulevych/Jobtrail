@@ -24,7 +24,7 @@ public class GitHubController {
     @PostMapping("/register")
     public RegisterResponse register(@Valid @RequestBody GithubRegisterRequest request) {
         User user = githubAuthService.register(request);
-        return new RegisterResponse(user.getId(), user.getEmail().value());
+        return new RegisterResponse(user.getId(), user.getName().value(), user.getEmail().value());
     }
 
     @PostMapping("/login")

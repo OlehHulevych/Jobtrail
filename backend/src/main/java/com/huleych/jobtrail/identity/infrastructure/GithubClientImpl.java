@@ -33,15 +33,15 @@ public class GithubClientImpl implements GithubClient {
     }
 
     @Override
-    public String fetchVerifiedEmail(String code) {
+    public GithubProfile fetchProfile(String code) {
         try {
-            return requestVerifiedEmail(code);
+            return requestProfile(code);
         } catch (RestClientException e) {
             throw new GithubAuthenticationException("Failed to communicate with GitHub");
         }
     }
 
-    private String requestVerifiedEmail(String code) {
+    private GithubProfile requestProfile(String code) {
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         tokenHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -63,6 +63,14 @@ public class GithubClientImpl implements GithubClient {
         headers.setBearerAuth(accessToken);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Map<String,Object>> userResponse = restTemplate.exchange("https://api.github.com/user",
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {});
+        Map<String,Object> userBody = userResponse.getBody();
+        if(userBody==null) throw new GithubAuthenticationException("Failed to fetch GitHub user");
+        String name = (String) userBody.get("name");
+        if(name==null || name.isBlank()) name = (String) userBody.get("login");
         ResponseEntity<List<Map<String,Object>>> response = restTemplate.exchange("https://api.github.com/user/emails",
                 HttpMethod.GET,
                 entity,
@@ -78,7 +86,7 @@ public class GithubClientImpl implements GithubClient {
         }
         if(primaryEmail==null) throw new GithubAuthenticationException("GitHub account has no verified primary email");
 
-        return primaryEmail;
+        return new GithubProfile(primaryEmail, name);
 
     }
 }
