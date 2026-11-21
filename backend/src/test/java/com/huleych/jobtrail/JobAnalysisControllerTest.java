@@ -44,7 +44,7 @@ public class JobAnalysisControllerTest {
 
     @BeforeEach
     public void init() {
-        User user = new User("user@example.com", "hash", Set.of());
+        User user = new User("Test User", "user@example.com", "hash", Set.of());
         ReflectionTestUtils.setField(user, "id", USER_ID);
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));

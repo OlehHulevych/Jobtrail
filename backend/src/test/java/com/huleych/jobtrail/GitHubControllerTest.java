@@ -91,7 +91,7 @@ public class GitHubControllerTest {
 
     @Test
     public void registerShouldReturnIdAndEmailAndPassSkillsToService() throws Exception {
-        User user = new User("user@example.com", null, Set.of());
+        User user = new User("Test User", "user@example.com", null, Set.of());
         ReflectionTestUtils.setField(user, "id", USER_ID);
         when(githubAuthService.register(any(GithubRegisterRequest.class))).thenReturn(user);
 

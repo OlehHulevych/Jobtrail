@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 public class GoogleAuthServiceTest {
     private static final String ID_TOKEN = "google-id-token";
     private static final String EMAIL = "user@example.com";
+    private static final String NAME = "Test User";
 
     @Mock
     JwtDecoder googleJwtDecoder;
@@ -53,14 +54,15 @@ public class GoogleAuthServiceTest {
     private Jwt googleJwt(Boolean emailVerified) {
         Jwt.Builder builder = Jwt.withTokenValue(ID_TOKEN)
                 .header("alg", "RS256")
-                .claim("email", EMAIL);
+                .claim("email", EMAIL)
+                .claim("name", NAME);
         if (emailVerified != null) builder.claim("email_verified", emailVerified);
         return builder.build();
     }
 
     @Test
     public void loginShouldReturnTokensWhenUserExistsAndEmailIsVerified() {
-        User user = new User(EMAIL, null, Set.of());
+        User user = new User(NAME, EMAIL, null, Set.of());
         when(googleJwtDecoder.decode(ID_TOKEN)).thenReturn(googleJwt(true));
         when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(user));
         when(tokenService.createAccessToken(user)).thenReturn("access");
@@ -130,7 +132,7 @@ public class GoogleAuthServiceTest {
     @Test
     public void registerShouldThrowEmailAlreadyTakenWhenUserExists() {
         when(googleJwtDecoder.decode(ID_TOKEN)).thenReturn(googleJwt(true));
-        when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(new User(EMAIL, "hash", Set.of())));
+        when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(new User(NAME, EMAIL, "hash", Set.of())));
 
         assertThrows(EmailAlreadyTakenException.class,
                 () -> service.register(new GoogleRegisterRequest(ID_TOKEN, Set.of())));

@@ -93,7 +93,7 @@ public class GoogleControllerTest {
 
     @Test
     public void registerShouldReturnIdAndEmailAndPassSkillsToService() throws Exception {
-        User user = new User("user@example.com", null, Set.of());
+        User user = new User("Test User", "user@example.com", null, Set.of());
         ReflectionTestUtils.setField(user, "id", USER_ID);
         when(googleAuthService.register(any(GoogleRegisterRequest.class))).thenReturn(user);
 

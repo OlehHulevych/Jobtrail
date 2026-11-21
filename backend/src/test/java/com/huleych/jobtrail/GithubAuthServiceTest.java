@@ -12,6 +12,7 @@ import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenExceptio
 import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.infrastructure.GithubClient;
+import com.huleych.jobtrail.identity.infrastructure.GithubProfile;
 import com.huleych.jobtrail.identity.infrastructure.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.*;
 public class GithubAuthServiceTest {
     private static final String CODE = "github-code";
     private static final String EMAIL = "user@example.com";
+    private static final String NAME = "Test User";
 
     @Mock
     GithubClient githubClient;
@@ -49,8 +51,8 @@ public class GithubAuthServiceTest {
 
     @Test
     public void loginShouldReturnTokensWhenUserExists() {
-        User user = new User(EMAIL, null, Set.of());
-        when(githubClient.fetchVerifiedEmail(CODE)).thenReturn(EMAIL);
+        User user = new User(NAME, EMAIL, null, Set.of());
+        when(githubClient.fetchProfile(CODE)).thenReturn(new GithubProfile(EMAIL, NAME));
         when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(user));
         when(tokenService.createAccessToken(user)).thenReturn("access");
         when(refreshTokenService.createRefreshToken(user)).thenReturn("refresh");
@@ -63,7 +65,7 @@ public class GithubAuthServiceTest {
 
     @Test
     public void loginShouldThrowUserNotFoundByEmailWhenUserDoesNotExist() {
-        when(githubClient.fetchVerifiedEmail(CODE)).thenReturn(EMAIL);
+        when(githubClient.fetchProfile(CODE)).thenReturn(new GithubProfile(EMAIL, NAME));
         when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundByEmailException.class, () -> service.login(CODE));
@@ -72,7 +74,7 @@ public class GithubAuthServiceTest {
 
     @Test
     public void loginShouldPropagateGithubAuthenticationException() {
-        when(githubClient.fetchVerifiedEmail(CODE)).thenThrow(new GithubAuthenticationException("bad code"));
+        when(githubClient.fetchProfile(CODE)).thenThrow(new GithubAuthenticationException("bad code"));
 
         assertThrows(GithubAuthenticationException.class, () -> service.login(CODE));
         verifyNoInteractions(userRepository, tokenService, refreshTokenService);
@@ -81,7 +83,7 @@ public class GithubAuthServiceTest {
     @Test
     public void registerShouldSaveUserWithoutPasswordAndWithSkills() {
         Set<Skill> skills = Set.of(new Skill("java"));
-        when(githubClient.fetchVerifiedEmail(CODE)).thenReturn(EMAIL);
+        when(githubClient.fetchProfile(CODE)).thenReturn(new GithubProfile(EMAIL, NAME));
         when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.empty());
 
         User result = service.register(new GithubRegisterRequest(CODE, skills));
@@ -96,8 +98,8 @@ public class GithubAuthServiceTest {
 
     @Test
     public void registerShouldThrowEmailAlreadyTakenWhenUserExists() {
-        when(githubClient.fetchVerifiedEmail(CODE)).thenReturn(EMAIL);
-        when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(new User(EMAIL, "hash", Set.of())));
+        when(githubClient.fetchProfile(CODE)).thenReturn(new GithubProfile(EMAIL, NAME));
+        when(userRepository.findByEmail(new Email(EMAIL))).thenReturn(Optional.of(new User(NAME, EMAIL, "hash", Set.of())));
 
         assertThrows(EmailAlreadyTakenException.class,
                 () -> service.register(new GithubRegisterRequest(CODE, Set.of())));
@@ -106,7 +108,7 @@ public class GithubAuthServiceTest {
 
     @Test
     public void registerShouldPropagateGithubAuthenticationException() {
-        when(githubClient.fetchVerifiedEmail(CODE)).thenThrow(new GithubAuthenticationException("bad code"));
+        when(githubClient.fetchProfile(CODE)).thenThrow(new GithubAuthenticationException("bad code"));
 
         assertThrows(GithubAuthenticationException.class,
                 () -> service.register(new GithubRegisterRequest(CODE, Set.of())));
