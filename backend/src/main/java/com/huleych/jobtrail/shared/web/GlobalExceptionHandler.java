@@ -2,6 +2,7 @@ package com.huleych.jobtrail.shared.web;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
+import com.huleych.jobtrail.identity.domain.exceptions.NotCvDocumentOwnerException;
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
@@ -73,6 +74,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(NotApplicationOwnerException.class)
     public ResponseEntity<String> handleNotApplicationOwnerException(NotApplicationOwnerException ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+
+    }
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NotCvDocumentOwnerException.class)
+    public ResponseEntity<String> handleNotCvDocumentOwnerException(NotCvDocumentOwnerException ex){
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
 
     }

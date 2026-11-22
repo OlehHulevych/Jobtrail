@@ -1,5 +1,6 @@
 package com.huleych.jobtrail.identity.domain;
 
+import com.huleych.jobtrail.identity.domain.exceptions.NotCvDocumentOwnerException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -38,6 +39,9 @@ public class User implements UserDetails {
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "name"}))
     private Set<Skill> skills = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<CvDocument> cvDocuments = new HashSet<CvDocument>();
+
     protected User() {
 
     }
@@ -60,10 +64,24 @@ public class User implements UserDetails {
         skills.removeIf(s -> s.matches(name));
     }
 
+    public void addCvDocument(CvDocument cvDocument){
+        if(cvDocument == null) throw new IllegalArgumentException("Cv is required");
+        if(!cvDocument.getUser().getId().equals(this.getId())) throw new NotCvDocumentOwnerException(this.getId(), cvDocument.getId());
+        cvDocuments.add(cvDocument);
+    }
+
+    public void removeCvDocument(String objectKey){
+        if(objectKey==null || objectKey.isBlank()) throw new IllegalArgumentException("Object key is required");
+        cvDocuments.removeIf(cv->cv.getObjectKey().equals(objectKey));
+    }
+
     public Set<Skill> getSkills() {
         return Set.copyOf(skills);
     }
 
+    public Set<CvDocument> getCvDocuments(){
+        return Set.copyOf(cvDocuments);
+    }
 
 
     public void changePasswordHash(String newPasswordHash) {
