@@ -1,7 +1,7 @@
 package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.identity.domain.User;
-import com.huleych.jobtrail.insights.application.ChatService;
+import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
 import com.huleych.jobtrail.insights.domain.Seniority;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
 import com.huleych.jobtrail.insights.web.JobAnalysisController;
@@ -39,7 +39,7 @@ public class JobAnalysisControllerTest {
     private static final UUID ANALYSIS_ID = UUID.fromString("00000000-0000-0000-0000-000000000020");
 
     @Mock
-    ChatService chatService;
+    JobAnalysisChatService jobAnalysisChatService;
     MockMvc mockMvc;
 
     @BeforeEach
@@ -48,7 +48,7 @@ public class JobAnalysisControllerTest {
         ReflectionTestUtils.setField(user, "id", USER_ID);
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
-        mockMvc = MockMvcBuilders.standaloneSetup(new JobAnalysisController(chatService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new JobAnalysisController(jobAnalysisChatService))
                 .setCustomArgumentResolvers(new AuthenticationPrincipalArgumentResolver())
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
@@ -64,7 +64,7 @@ public class JobAnalysisControllerTest {
         JobAnalysisResponse response = new JobAnalysisResponse(ANALYSIS_ID, APPLICATION_ID, "A backend role",
                 Seniority.MID, List.of("Java"), List.of("Docker"), List.of("Build APIs"), List.of("Constant availability"),
                 LocalDateTime.of(2026, 11, 20, 10, 0));
-        when(chatService.execute(USER_ID, APPLICATION_ID)).thenReturn(response);
+        when(jobAnalysisChatService.execute(USER_ID, APPLICATION_ID)).thenReturn(response);
 
         mockMvc.perform(post("/api/applications/{id}/analysis", APPLICATION_ID))
                 .andExpect(status().isOk())
@@ -77,12 +77,12 @@ public class JobAnalysisControllerTest {
                 .andExpect(jsonPath("$.responsibilities[0]").value("Build APIs"))
                 .andExpect(jsonPath("$.redFlags[0]").value("Constant availability"));
 
-        verify(chatService).execute(USER_ID, APPLICATION_ID);
+        verify(jobAnalysisChatService).execute(USER_ID, APPLICATION_ID);
     }
 
     @Test
     public void shouldReturnNotFoundWhenApplicationDoesNotExist() throws Exception {
-        when(chatService.execute(USER_ID, APPLICATION_ID)).thenThrow(new ApplicationNotFoundException(APPLICATION_ID));
+        when(jobAnalysisChatService.execute(USER_ID, APPLICATION_ID)).thenThrow(new ApplicationNotFoundException(APPLICATION_ID));
 
         mockMvc.perform(post("/api/applications/{id}/analysis", APPLICATION_ID))
                 .andExpect(status().isNotFound());
@@ -90,7 +90,7 @@ public class JobAnalysisControllerTest {
 
     @Test
     public void shouldReturnForbiddenWhenCallerIsNotOwner() throws Exception {
-        when(chatService.execute(USER_ID, APPLICATION_ID))
+        when(jobAnalysisChatService.execute(USER_ID, APPLICATION_ID))
                 .thenThrow(new NotApplicationOwnerException(USER_ID, APPLICATION_ID));
 
         mockMvc.perform(post("/api/applications/{id}/analysis", APPLICATION_ID))
@@ -99,7 +99,7 @@ public class JobAnalysisControllerTest {
 
     @Test
     public void shouldReturnBadGatewayWhenAiReturnsNoAnalysis() throws Exception {
-        when(chatService.execute(USER_ID, APPLICATION_ID)).thenThrow(new JobAnalysisFailedException(APPLICATION_ID));
+        when(jobAnalysisChatService.execute(USER_ID, APPLICATION_ID)).thenThrow(new JobAnalysisFailedException(APPLICATION_ID));
 
         mockMvc.perform(post("/api/applications/{id}/analysis", APPLICATION_ID))
                 .andExpect(status().isBadGateway());
@@ -110,6 +110,6 @@ public class JobAnalysisControllerTest {
         mockMvc.perform(post("/api/applications/{id}/analysis", "not-a-uuid"))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(chatService);
+        verifyNoInteractions(jobAnalysisChatService);
     }
 }

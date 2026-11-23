@@ -1,5 +1,6 @@
 package com.huleych.jobtrail.insights.application;
 
+import com.huleych.jobtrail.insights.application.result.JobAnalysisResult;
 import com.huleych.jobtrail.insights.domain.JobAnalysis;
 import com.huleych.jobtrail.insights.domain.JobAnalysisRepository;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
@@ -16,12 +17,12 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class ChatService {
+public class JobAnalysisChatService {
     private final ChatClient builder;
     private final JobApplicationRepository jobApplicationRepository;
     private final Resource analysisPrompt;
     private final JobAnalysisRepository jobAnalysisRepository;
-    public ChatService(JobApplicationRepository jobApplicationRepository, @Value("classpath:/prompts/job-analysis.st") Resource analysisPrompt, ChatClient.Builder builder, JobAnalysisRepository jobAnalysisRepository){
+    public JobAnalysisChatService(JobApplicationRepository jobApplicationRepository, @Value("classpath:/prompts/job-analysis.st") Resource analysisPrompt, ChatClient.Builder builder, JobAnalysisRepository jobAnalysisRepository){
         this.builder = builder.build();
         this.jobApplicationRepository = jobApplicationRepository;
         this.analysisPrompt = analysisPrompt;

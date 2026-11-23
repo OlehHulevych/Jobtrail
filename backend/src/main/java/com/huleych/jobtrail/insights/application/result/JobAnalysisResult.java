@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.insights.application;
+package com.huleych.jobtrail.insights.application.result;
 
 import com.huleych.jobtrail.insights.domain.Seniority;
 

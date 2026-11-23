@@ -1,7 +1,7 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.insights.application.ChatService;
-import com.huleych.jobtrail.insights.application.JobAnalysisResult;
+import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
+import com.huleych.jobtrail.insights.application.result.JobAnalysisResult;
 import com.huleych.jobtrail.insights.domain.JobAnalysis;
 import com.huleych.jobtrail.insights.domain.JobAnalysisRepository;
 import com.huleych.jobtrail.insights.domain.Seniority;
@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ChatServiceTest {
+public class JobAnalysisChatServiceTest {
     private static final UUID OWNER_ID = UUID.fromString("00000000-0000-0000-0000-000000000005");
     private static final UUID OTHER_USER_ID = UUID.fromString("00000000-0000-0000-0000-000000000003");
     private static final UUID APPLICATION_ID = UUID.fromString("00000000-0000-0000-0000-000000000010");
@@ -59,12 +59,12 @@ public class ChatServiceTest {
 
     Resource promptResource = new ByteArrayResource("prompt {jobDescription}".getBytes());
     JobApplication application;
-    ChatService service;
+    JobAnalysisChatService service;
 
     @BeforeEach
     public void init() {
         when(chatClientBuilder.build()).thenReturn(chatClient);
-        service = new ChatService(jobApplicationRepository, promptResource, chatClientBuilder, jobAnalysisRepository);
+        service = new JobAnalysisChatService(jobApplicationRepository, promptResource, chatClientBuilder, jobAnalysisRepository);
         application = new JobApplication(OWNER_ID, "Acme", "Java Developer", "https://acme.example/jobs/1", JOB_DESCRIPTION);
         ReflectionTestUtils.setField(application, "id", APPLICATION_ID);
     }
