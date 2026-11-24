@@ -1,4 +1,5 @@
 package com.huleych.jobtrail.shared.web;
+import com.huleych.jobtrail.identity.domain.exceptions.CvDocumentNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
@@ -6,6 +7,7 @@ import com.huleych.jobtrail.identity.domain.exceptions.NotCvDocumentOwnerExcepti
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
+import com.huleych.jobtrail.insights.domain.exceptions.CvAnalysisFailedException;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
@@ -59,6 +61,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleJobAnalysisFailedException(JobAnalysisFailedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ex.getMessage());
     }
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    @ExceptionHandler(CvAnalysisFailedException.class)
+    public ResponseEntity<String> handleCvAnalysisFailedException(CvAnalysisFailedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ex.getMessage());
+    }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex){
@@ -75,6 +82,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotApplicationOwnerException.class)
     public ResponseEntity<String> handleNotApplicationOwnerException(NotApplicationOwnerException ex){
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CvDocumentNotFoundException.class)
+    public ResponseEntity<String> handleCvDocumentNotFoundException(CvDocumentNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 
     }
     @ResponseStatus(HttpStatus.FORBIDDEN)

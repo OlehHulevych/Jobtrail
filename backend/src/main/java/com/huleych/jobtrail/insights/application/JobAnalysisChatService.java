@@ -32,11 +32,14 @@ public class JobAnalysisChatService {
     public JobAnalysisResponse execute(UUID userId, UUID applicationId){
         if(userId==null) throw new IllegalArgumentException("User id is required");
         if(applicationId==null) throw new IllegalArgumentException("Application id is required");
+
         JobApplication application = jobApplicationRepository.findById(applicationId).orElse(null);
         if(application==null) throw new ApplicationNotFoundException(applicationId);
         if(!application.getOwnerId().equals(userId)) throw new NotApplicationOwnerException(userId, applicationId);
+
         JobAnalysisResult result = builder.prompt().user(u->u.text(analysisPrompt).param("jobDescription",application.getJobDescription())).call().entity(JobAnalysisResult.class);
         if(result==null) throw new JobAnalysisFailedException(applicationId);
+
         JobAnalysis jobAnalysis = jobAnalysisRepository.findByApplicationId(applicationId).orElse(null);
         if(jobAnalysis==null) {
             jobAnalysis = new JobAnalysis(application.getId(),result.summary(),result.seniority(),result.requiredSkills(),result.niceToHaveSkills(),result.responsibilities(),result.redFlags());

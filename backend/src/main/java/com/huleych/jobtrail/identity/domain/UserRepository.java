@@ -8,4 +8,5 @@ public interface UserRepository{
     boolean existsById(UUID id);
     boolean existsByEmail(Email email);
     Optional<User> findByEmail(Email email);
+    Optional<User> findById(UUID id);
 }
