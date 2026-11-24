@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.tracking.application.services;
 
 import com.huleych.jobtrail.tracking.application.commands.UpdateJobApplicationCommand;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import com.huleych.jobtrail.tracking.web.EditApplicationRequest;
 import com.huleych.jobtrail.tracking.web.JobApplicationResponse;
 import org.springframework.stereotype.Service;

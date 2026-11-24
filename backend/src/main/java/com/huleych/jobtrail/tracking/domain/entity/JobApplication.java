@@ -1,5 +1,6 @@
-package com.huleych.jobtrail.tracking.domain;
+package com.huleych.jobtrail.tracking.domain.entity;
 
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFoundException;
 import jakarta.persistence.*;

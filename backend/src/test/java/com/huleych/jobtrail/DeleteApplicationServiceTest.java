@@ -1,8 +1,8 @@
 package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.application.services.DeleteApplicationService;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
 import org.junit.jupiter.api.BeforeEach;

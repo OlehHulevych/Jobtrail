@@ -1,4 +1,7 @@
-package com.huleych.jobtrail.tracking.domain;
+package com.huleych.jobtrail.tracking.infrastructure.repository;
+
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 
 import java.util.List;
 import java.util.Optional;

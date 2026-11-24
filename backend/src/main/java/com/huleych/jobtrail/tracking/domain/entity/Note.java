@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.tracking.domain;
+package com.huleych.jobtrail.tracking.domain.entity;
 
 import jakarta.persistence.*;
 

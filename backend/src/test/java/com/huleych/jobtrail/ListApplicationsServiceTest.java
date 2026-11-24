@@ -2,9 +2,9 @@ package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.application.services.ListApplications;
 import com.huleych.jobtrail.tracking.application.services.ListApplicationsService;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.web.JobApplicationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

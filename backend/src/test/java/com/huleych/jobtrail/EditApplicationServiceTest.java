@@ -2,9 +2,9 @@ package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.application.services.EditApplication;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
 import com.huleych.jobtrail.tracking.web.EditApplicationRequest;

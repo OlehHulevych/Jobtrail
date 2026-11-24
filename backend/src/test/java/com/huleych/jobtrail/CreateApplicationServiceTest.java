@@ -4,7 +4,7 @@ import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
 import com.huleych.jobtrail.tracking.application.services.CreateApplication;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import com.huleych.jobtrail.tracking.web.CreateApplicationRequest;
 import com.huleych.jobtrail.tracking.web.JobApplicationResponse;
 import org.junit.jupiter.api.BeforeEach;

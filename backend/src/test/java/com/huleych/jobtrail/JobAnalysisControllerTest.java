@@ -1,11 +1,11 @@
 package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.identity.domain.entity.User;
-import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
-import com.huleych.jobtrail.insights.domain.Seniority;
+import com.huleych.jobtrail.insights.application.service.JobAnalysisChatService;
+import com.huleych.jobtrail.insights.domain.enums.Seniority;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
-import com.huleych.jobtrail.insights.web.JobAnalysisController;
-import com.huleych.jobtrail.insights.web.JobAnalysisResponse;
+import com.huleych.jobtrail.insights.web.controller.JobAnalysisController;
+import com.huleych.jobtrail.insights.web.response.JobAnalysisResponse;
 import com.huleych.jobtrail.shared.web.GlobalExceptionHandler;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;

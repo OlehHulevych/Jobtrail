@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.tracking.domain;
+package com.huleych.jobtrail.tracking.domain.enums;
 
 public enum ApplicationStatus {
     WISHLIST,

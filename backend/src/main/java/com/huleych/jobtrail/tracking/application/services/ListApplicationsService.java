@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.tracking.application.services;
 
 import com.huleych.jobtrail.tracking.application.queries.ListApplicationsQuery;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import com.huleych.jobtrail.tracking.web.JobApplicationResponse;
 import org.springframework.stereotype.Service;
 

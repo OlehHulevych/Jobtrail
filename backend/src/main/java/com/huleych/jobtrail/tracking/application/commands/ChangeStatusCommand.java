@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.tracking.application.commands;
 
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 
 import java.util.UUID;
 

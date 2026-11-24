@@ -1,11 +1,10 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FakeJobApplicationRepository implements JobApplicationRepository {
     public List<JobApplication> storage;

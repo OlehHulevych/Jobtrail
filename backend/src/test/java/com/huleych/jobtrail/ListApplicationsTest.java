@@ -3,9 +3,9 @@ package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.application.queries.ListApplicationsQuery;
 import com.huleych.jobtrail.tracking.application.services.ListApplications;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

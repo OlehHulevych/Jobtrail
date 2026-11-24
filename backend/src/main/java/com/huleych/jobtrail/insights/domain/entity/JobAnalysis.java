@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.insights.domain.entity;
 
 import com.huleych.jobtrail.insights.domain.enums.Seniority;
-import com.huleych.jobtrail.tracking.domain.BaseEntity;
+import com.huleych.jobtrail.tracking.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

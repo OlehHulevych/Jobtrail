@@ -1,14 +1,14 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
+import com.huleych.jobtrail.insights.application.service.JobAnalysisChatService;
 import com.huleych.jobtrail.insights.application.result.JobAnalysisResult;
-import com.huleych.jobtrail.insights.domain.JobAnalysis;
-import com.huleych.jobtrail.insights.domain.JobAnalysisRepository;
-import com.huleych.jobtrail.insights.domain.Seniority;
+import com.huleych.jobtrail.insights.domain.entity.JobAnalysis;
+import com.huleych.jobtrail.insights.infrastructure.repository.JobAnalysisRepository;
+import com.huleych.jobtrail.insights.domain.enums.Seniority;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
-import com.huleych.jobtrail.insights.web.JobAnalysisResponse;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
+import com.huleych.jobtrail.insights.web.response.JobAnalysisResponse;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
 import org.junit.jupiter.api.BeforeEach;

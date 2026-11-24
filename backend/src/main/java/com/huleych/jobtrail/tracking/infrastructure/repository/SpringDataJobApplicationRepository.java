@@ -1,7 +1,7 @@
-package com.huleych.jobtrail.tracking.infrastructure;
+package com.huleych.jobtrail.tracking.infrastructure.repository;
 
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

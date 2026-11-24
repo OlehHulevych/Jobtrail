@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.identity.domain.entity;
 
-import com.huleych.jobtrail.tracking.domain.BaseEntity;
+import com.huleych.jobtrail.tracking.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

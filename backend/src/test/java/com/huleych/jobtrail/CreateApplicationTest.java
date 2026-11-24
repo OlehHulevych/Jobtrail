@@ -2,8 +2,8 @@ package com.huleych.jobtrail;
 
 import com.huleych.jobtrail.tracking.application.commands.CreateApplicationCommand;
 import com.huleych.jobtrail.tracking.application.services.CreateApplication;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import com.huleych.jobtrail.tracking.domain.exceptions.InvalidStatusTransitionException;
 import com.huleych.jobtrail.tracking.domain.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

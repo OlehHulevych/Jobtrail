@@ -1,9 +1,10 @@
 package com.huleych.jobtrail.tracking.infrastructure;
 
 import com.huleych.jobtrail.support.PostgresContainerConfig;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
-import com.huleych.jobtrail.tracking.domain.Note;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
+import com.huleych.jobtrail.tracking.domain.entity.Note;
+import com.huleych.jobtrail.tracking.infrastructure.repository.JpaJobApplicationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Test;

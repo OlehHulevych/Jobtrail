@@ -7,7 +7,7 @@ import com.huleych.jobtrail.identity.domain.valueObjects.Skill;
 import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
-import com.huleych.jobtrail.identity.web.GoogleController;
+import com.huleych.jobtrail.identity.web.controller.GoogleController;
 import com.huleych.jobtrail.shared.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

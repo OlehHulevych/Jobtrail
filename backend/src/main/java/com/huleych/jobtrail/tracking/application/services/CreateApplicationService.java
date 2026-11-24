@@ -3,7 +3,7 @@ package com.huleych.jobtrail.tracking.application.services;
 import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
 import com.huleych.jobtrail.tracking.application.commands.CreateApplicationCommand;
-import com.huleych.jobtrail.tracking.domain.JobApplication;
+import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import com.huleych.jobtrail.tracking.web.CreateApplicationRequest;
 import com.huleych.jobtrail.tracking.web.JobApplicationResponse;
 import org.springframework.stereotype.Service;

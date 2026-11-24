@@ -8,7 +8,7 @@ import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
-import com.huleych.jobtrail.identity.web.GitHubController;
+import com.huleych.jobtrail.identity.web.controller.GitHubController;
 import com.huleych.jobtrail.shared.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

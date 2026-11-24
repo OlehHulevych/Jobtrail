@@ -9,7 +9,7 @@ import com.huleych.jobtrail.tracking.application.services.DeleteNoteService;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
 import com.huleych.jobtrail.tracking.application.services.GetApplicationService;
 import com.huleych.jobtrail.tracking.application.services.ListApplicationsService;
-import com.huleych.jobtrail.tracking.domain.ApplicationStatus;
+import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
