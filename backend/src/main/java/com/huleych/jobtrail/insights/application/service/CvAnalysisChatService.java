@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.insights.application;
+package com.huleych.jobtrail.insights.application.service;
 
 import com.huleych.jobtrail.identity.domain.entity.CvDocument;
 import com.huleych.jobtrail.identity.domain.entity.User;
@@ -10,8 +10,8 @@ import com.huleych.jobtrail.identity.infrastructure.repository.CvDocumentReposit
 import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.insights.application.commands.AnalyzeMatchCommand;
 import com.huleych.jobtrail.insights.application.result.MatchAnalysisResult;
-import com.huleych.jobtrail.insights.domain.CvMatchAnalysis;
-import com.huleych.jobtrail.insights.domain.CvMatchAnalysisRepository;
+import com.huleych.jobtrail.insights.domain.entity.CvMatchAnalysis;
+import com.huleych.jobtrail.insights.infrastructure.repository.CvMatchAnalysisRepository;
 import com.huleych.jobtrail.insights.domain.exceptions.CvAnalysisFailedException;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;

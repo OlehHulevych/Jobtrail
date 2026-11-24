@@ -1,6 +1,6 @@
-package com.huleych.jobtrail.insights.infrastructure;
+package com.huleych.jobtrail.insights.infrastructure.repository;
 
-import com.huleych.jobtrail.insights.domain.JobAnalysis;
+import com.huleych.jobtrail.insights.domain.entity.JobAnalysis;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

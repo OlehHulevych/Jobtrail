@@ -1,8 +1,9 @@
-package com.huleych.jobtrail.insights.domain;
+package com.huleych.jobtrail.insights.domain.entity;
 
 import com.huleych.jobtrail.identity.domain.entity.CvDocument;
 import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.identity.domain.exceptions.NotCvDocumentOwnerException;
+import com.huleych.jobtrail.insights.domain.enums.AnalysisStatus;
 import com.huleych.jobtrail.tracking.domain.BaseEntity;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;

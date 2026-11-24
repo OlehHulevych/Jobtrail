@@ -1,10 +1,10 @@
-package com.huleych.jobtrail.insights.application;
+package com.huleych.jobtrail.insights.application.service;
 
 import com.huleych.jobtrail.insights.application.result.JobAnalysisResult;
-import com.huleych.jobtrail.insights.domain.JobAnalysis;
-import com.huleych.jobtrail.insights.domain.JobAnalysisRepository;
+import com.huleych.jobtrail.insights.domain.entity.JobAnalysis;
+import com.huleych.jobtrail.insights.infrastructure.repository.JobAnalysisRepository;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;
-import com.huleych.jobtrail.insights.web.JobAnalysisResponse;
+import com.huleych.jobtrail.insights.web.response.JobAnalysisResponse;
 import com.huleych.jobtrail.tracking.domain.JobApplication;
 import com.huleych.jobtrail.tracking.domain.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;

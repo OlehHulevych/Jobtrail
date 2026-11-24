@@ -1,6 +1,6 @@
-package com.huleych.jobtrail.insights.web;
+package com.huleych.jobtrail.insights.web.response;
 
-import com.huleych.jobtrail.insights.domain.Seniority;
+import com.huleych.jobtrail.insights.domain.enums.Seniority;
 
 import java.time.LocalDateTime;
 import java.util.List;

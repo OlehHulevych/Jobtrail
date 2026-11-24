@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.insights.domain;
+package com.huleych.jobtrail.insights.domain.enums;
 
 public enum Seniority {
     JUNIOR,

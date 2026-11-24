@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.insights.application.result;
 
-import com.huleych.jobtrail.insights.domain.Seniority;
+import com.huleych.jobtrail.insights.domain.enums.Seniority;
 
 import java.util.List;
 

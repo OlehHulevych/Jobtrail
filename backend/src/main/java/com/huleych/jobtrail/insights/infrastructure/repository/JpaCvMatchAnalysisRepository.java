@@ -1,7 +1,6 @@
-package com.huleych.jobtrail.insights.infrastructure;
+package com.huleych.jobtrail.insights.infrastructure.repository;
 
-import com.huleych.jobtrail.insights.domain.CvMatchAnalysis;
-import com.huleych.jobtrail.insights.domain.CvMatchAnalysisRepository;
+import com.huleych.jobtrail.insights.domain.entity.CvMatchAnalysis;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

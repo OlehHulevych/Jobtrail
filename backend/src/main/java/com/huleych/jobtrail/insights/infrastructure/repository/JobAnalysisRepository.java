@@ -1,4 +1,6 @@
-package com.huleych.jobtrail.insights.domain;
+package com.huleych.jobtrail.insights.infrastructure.repository;
+
+import com.huleych.jobtrail.insights.domain.entity.JobAnalysis;
 
 import java.util.Optional;
 import java.util.UUID;
