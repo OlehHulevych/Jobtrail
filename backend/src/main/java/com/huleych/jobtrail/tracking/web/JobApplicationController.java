@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.tracking.web;
 
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.tracking.application.services.AddNoteService;
 import com.huleych.jobtrail.tracking.application.services.ChangeStatusService;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;

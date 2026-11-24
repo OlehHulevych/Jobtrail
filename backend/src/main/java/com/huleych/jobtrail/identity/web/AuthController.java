@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.identity.web;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.LoginCommand;
 import com.huleych.jobtrail.identity.application.commands.LogoutCommand;
 import com.huleych.jobtrail.identity.application.commands.RefreshCommand;
@@ -9,7 +9,7 @@ import com.huleych.jobtrail.identity.application.service.LoginUser;
 import com.huleych.jobtrail.identity.application.service.LogoutUser;
 import com.huleych.jobtrail.identity.application.service.RefreshAccessToken;
 import com.huleych.jobtrail.identity.application.service.RegisterUser;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

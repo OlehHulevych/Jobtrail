@@ -1,9 +1,9 @@
 package com.huleych.jobtrail.identity.web;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.GoogleRegisterRequest;
 import com.huleych.jobtrail.identity.application.service.GoogleAuthService;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;

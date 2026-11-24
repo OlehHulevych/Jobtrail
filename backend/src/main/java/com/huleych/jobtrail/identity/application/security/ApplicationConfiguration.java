@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.identity.application.security;
 
-import com.huleych.jobtrail.identity.domain.Email;
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.valueObjects.Email;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

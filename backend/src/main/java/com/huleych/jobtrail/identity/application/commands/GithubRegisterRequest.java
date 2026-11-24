@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.identity.application.commands;
 
-import com.huleych.jobtrail.identity.domain.Skill;
+import com.huleych.jobtrail.identity.domain.valueObjects.Skill;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Set;

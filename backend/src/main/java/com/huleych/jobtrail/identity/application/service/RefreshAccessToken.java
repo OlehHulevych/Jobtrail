@@ -1,12 +1,12 @@
 package com.huleych.jobtrail.identity.application.service;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.RefreshCommand;
-import com.huleych.jobtrail.identity.domain.RefreshToken;
-import com.huleych.jobtrail.identity.domain.RefreshTokenRepository;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.RefreshToken;
+import com.huleych.jobtrail.identity.infrastructure.repository.RefreshTokenRepository;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
-import com.huleych.jobtrail.identity.infrastructure.TokenService;
+import com.huleych.jobtrail.identity.infrastructure.service.TokenService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

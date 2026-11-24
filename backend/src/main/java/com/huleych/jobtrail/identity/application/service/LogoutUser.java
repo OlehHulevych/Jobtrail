@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.identity.application.service;
-import com.huleych.jobtrail.identity.domain.RefreshToken;
-import com.huleych.jobtrail.identity.domain.RefreshTokenRepository;
+import com.huleych.jobtrail.identity.domain.entity.RefreshToken;
+import com.huleych.jobtrail.identity.infrastructure.repository.RefreshTokenRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.RefreshTokenNotFoundException;
 import com.huleych.jobtrail.identity.application.commands.LogoutCommand;
 import org.springframework.stereotype.Service;

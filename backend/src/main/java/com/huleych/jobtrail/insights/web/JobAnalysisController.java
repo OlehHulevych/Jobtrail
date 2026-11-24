@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.insights.web;
 
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;

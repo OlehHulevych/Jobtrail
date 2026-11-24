@@ -1,19 +1,19 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.GithubRegisterRequest;
 import com.huleych.jobtrail.identity.application.service.GithubAuthService;
 import com.huleych.jobtrail.identity.application.service.RefreshTokenService;
-import com.huleych.jobtrail.identity.domain.Email;
-import com.huleych.jobtrail.identity.domain.Skill;
-import com.huleych.jobtrail.identity.domain.User;
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.valueObjects.Email;
+import com.huleych.jobtrail.identity.domain.valueObjects.Skill;
+import com.huleych.jobtrail.identity.domain.entity.User;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.GithubAuthenticationException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
-import com.huleych.jobtrail.identity.infrastructure.GithubClient;
-import com.huleych.jobtrail.identity.infrastructure.GithubProfile;
-import com.huleych.jobtrail.identity.infrastructure.TokenService;
+import com.huleych.jobtrail.identity.infrastructure.client.GithubClient;
+import com.huleych.jobtrail.identity.infrastructure.client.GithubProfile;
+import com.huleych.jobtrail.identity.infrastructure.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

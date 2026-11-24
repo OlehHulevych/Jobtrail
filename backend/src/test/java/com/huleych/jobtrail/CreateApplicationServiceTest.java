@@ -1,6 +1,6 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
 import com.huleych.jobtrail.tracking.application.services.CreateApplication;
 import com.huleych.jobtrail.tracking.application.services.CreateApplicationService;

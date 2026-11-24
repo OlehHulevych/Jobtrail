@@ -1,11 +1,11 @@
 package com.huleych.jobtrail.identity.application.service;
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.LoginCommand;
-import com.huleych.jobtrail.identity.domain.Email;
-import com.huleych.jobtrail.identity.domain.User;
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.valueObjects.Email;
+import com.huleych.jobtrail.identity.domain.entity.User;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.InvalidCredentialsException;
-import com.huleych.jobtrail.identity.infrastructure.TokenService;
+import com.huleych.jobtrail.identity.infrastructure.service.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

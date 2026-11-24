@@ -1,11 +1,10 @@
 package com.huleych.jobtrail.identity.web;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.GithubLoginRequest;
 import com.huleych.jobtrail.identity.application.commands.GithubRegisterRequest;
-import com.huleych.jobtrail.identity.application.commands.RegisterUserCommand;
 import com.huleych.jobtrail.identity.application.service.GithubAuthService;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

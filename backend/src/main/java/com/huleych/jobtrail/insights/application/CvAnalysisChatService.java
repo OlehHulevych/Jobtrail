@@ -1,9 +1,13 @@
 package com.huleych.jobtrail.insights.application;
 
-import com.huleych.jobtrail.identity.domain.*;
+import com.huleych.jobtrail.identity.domain.entity.CvDocument;
+import com.huleych.jobtrail.identity.domain.entity.User;
+import com.huleych.jobtrail.identity.domain.enums.ExtractionStatus;
 import com.huleych.jobtrail.identity.domain.exceptions.CvDocumentNotFoundException;
 import com.huleych.jobtrail.identity.domain.exceptions.NotCvDocumentOwnerException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundException;
+import com.huleych.jobtrail.identity.infrastructure.repository.CvDocumentRepository;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.insights.application.commands.AnalyzeMatchCommand;
 import com.huleych.jobtrail.insights.application.result.MatchAnalysisResult;
 import com.huleych.jobtrail.insights.domain.CvMatchAnalysis;

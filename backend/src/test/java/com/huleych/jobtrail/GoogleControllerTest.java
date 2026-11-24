@@ -1,10 +1,10 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.GoogleRegisterRequest;
 import com.huleych.jobtrail.identity.application.service.GoogleAuthService;
-import com.huleych.jobtrail.identity.domain.Skill;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.valueObjects.Skill;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
 import com.huleych.jobtrail.identity.web.GoogleController;

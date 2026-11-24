@@ -1,6 +1,6 @@
 package com.huleych.jobtrail.identity.filters;
 
-import com.huleych.jobtrail.identity.infrastructure.TokenService;
+import com.huleych.jobtrail.identity.infrastructure.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

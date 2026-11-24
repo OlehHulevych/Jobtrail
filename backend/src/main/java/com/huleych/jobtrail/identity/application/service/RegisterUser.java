@@ -1,11 +1,11 @@
 package com.huleych.jobtrail.identity.application.service;
 
 import com.huleych.jobtrail.identity.application.commands.RegisterUserCommand;
-import com.huleych.jobtrail.identity.domain.Email;
-import com.huleych.jobtrail.identity.domain.Name;
-import com.huleych.jobtrail.identity.domain.Password;
-import com.huleych.jobtrail.identity.domain.User;
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.valueObjects.Email;
+import com.huleych.jobtrail.identity.domain.valueObjects.Name;
+import com.huleych.jobtrail.identity.domain.valueObjects.Password;
+import com.huleych.jobtrail.identity.domain.entity.User;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;

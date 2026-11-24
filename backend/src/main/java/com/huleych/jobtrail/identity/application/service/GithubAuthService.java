@@ -1,14 +1,14 @@
 package com.huleych.jobtrail.identity.application.service;
 
-import com.huleych.jobtrail.identity.application.LoginResult;
+import com.huleych.jobtrail.identity.application.result.LoginResult;
 import com.huleych.jobtrail.identity.application.commands.GithubRegisterRequest;
-import com.huleych.jobtrail.identity.domain.Email;
-import com.huleych.jobtrail.identity.domain.User;
-import com.huleych.jobtrail.identity.domain.UserRepository;
+import com.huleych.jobtrail.identity.domain.valueObjects.Email;
+import com.huleych.jobtrail.identity.domain.entity.User;
+import com.huleych.jobtrail.identity.infrastructure.repository.UserRepository;
 import com.huleych.jobtrail.identity.domain.exceptions.EmailAlreadyTakenException;
 import com.huleych.jobtrail.identity.domain.exceptions.UserNotFoundByEmailException;
-import com.huleych.jobtrail.identity.infrastructure.GithubClient;
-import com.huleych.jobtrail.identity.infrastructure.TokenService;
+import com.huleych.jobtrail.identity.infrastructure.client.GithubClient;
+import com.huleych.jobtrail.identity.infrastructure.service.TokenService;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;

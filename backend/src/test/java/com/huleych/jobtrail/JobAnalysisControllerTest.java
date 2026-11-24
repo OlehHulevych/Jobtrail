@@ -1,6 +1,6 @@
 package com.huleych.jobtrail;
 
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.User;
 import com.huleych.jobtrail.insights.application.JobAnalysisChatService;
 import com.huleych.jobtrail.insights.domain.Seniority;
 import com.huleych.jobtrail.insights.domain.exceptions.JobAnalysisFailedException;

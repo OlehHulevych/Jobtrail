@@ -1,7 +1,7 @@
 package com.huleych.jobtrail.identity.application.service;
 
-import com.huleych.jobtrail.identity.domain.RefreshToken;
-import com.huleych.jobtrail.identity.domain.User;
+import com.huleych.jobtrail.identity.domain.entity.RefreshToken;
+import com.huleych.jobtrail.identity.domain.entity.User;
 
 public interface RefreshTokenService {
     public String createRefreshToken(User user);
