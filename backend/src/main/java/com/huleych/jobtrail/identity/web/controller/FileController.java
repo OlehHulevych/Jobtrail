@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.identity.web;
+package com.huleych.jobtrail.identity.web.controller;
 
 import com.huleych.jobtrail.identity.infrastructure.storage.S3FileStorage;
 import org.springframework.http.HttpStatus;

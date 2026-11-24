@@ -1,4 +1,4 @@
-package com.huleych.jobtrail.identity.web;
+package com.huleych.jobtrail.identity.web.response;
 
 import java.util.UUID;
 
