@@ -8,6 +8,7 @@ import com.huleych.jobtrail.tracking.application.services.DeleteApplicationServi
 import com.huleych.jobtrail.tracking.application.services.DeleteNoteService;
 import com.huleych.jobtrail.tracking.application.services.EditApplicationService;
 import com.huleych.jobtrail.tracking.application.services.GetApplicationService;
+import com.huleych.jobtrail.tracking.application.services.GetDashboardService;
 import com.huleych.jobtrail.tracking.application.services.ListApplicationsService;
 import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import org.springframework.http.HttpStatus;
@@ -39,8 +40,9 @@ public class JobApplicationController {
     private final ChangeStatusService changeStatusService;
     private final AddNoteService addNoteService;
     private final DeleteNoteService deleteNoteService;
+    private final GetDashboardService getDashboardService;
 
-    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService, AddNoteService addNoteService, DeleteNoteService deleteNoteService) {
+    public JobApplicationController(CreateApplicationService createApplicationService, EditApplicationService editApplicationService, ListApplicationsService listApplicationsService, GetApplicationService getApplicationService, DeleteApplicationService deleteApplicationService, ChangeStatusService changeStatusService, AddNoteService addNoteService, DeleteNoteService deleteNoteService, GetDashboardService getDashboardService) {
         this.createApplicationService = createApplicationService;
         this.editApplicationService = editApplicationService;
         this.listApplicationsService = listApplicationsService;
@@ -49,6 +51,7 @@ public class JobApplicationController {
         this.changeStatusService = changeStatusService;
         this.addNoteService = addNoteService;
         this.deleteNoteService = deleteNoteService;
+        this.getDashboardService = getDashboardService;
     }
 
     @DeleteMapping("/{id}/notes/{noteId}")
@@ -72,6 +75,11 @@ public class JobApplicationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal User user, @PathVariable UUID id) {
         deleteApplicationService.execute(user.getId(), id);
+    }
+
+    @GetMapping("/dashboard")
+    public DashboardResponse dashboard(@AuthenticationPrincipal User user) {
+        return getDashboardService.execute(user.getId());
     }
 
     @GetMapping("/{id}")

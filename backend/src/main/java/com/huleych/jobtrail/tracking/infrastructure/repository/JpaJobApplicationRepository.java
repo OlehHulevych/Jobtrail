@@ -4,7 +4,9 @@ import com.huleych.jobtrail.tracking.domain.enums.ApplicationStatus;
 import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import org.springframework.stereotype.Repository;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +31,15 @@ public class JpaJobApplicationRepository implements JobApplicationRepository {
     @Override
     public List<JobApplication> findAllByOwnerIdAndStatus(UUID ownerId, ApplicationStatus status) {
         return repository.findAllByOwnerIdAndStatusOrderByCreatedAtDesc(ownerId,status);
+    }
+
+    @Override
+    public Map<ApplicationStatus, Long> countByStatus(UUID ownerId) {
+        Map<ApplicationStatus, Long> counts = new EnumMap<>(ApplicationStatus.class);
+        for (Object[] row : repository.countByStatus(ownerId)) {
+            counts.put((ApplicationStatus) row[0], (Long) row[1]);
+        }
+        return counts;
     }
 
     @Override

@@ -34,6 +34,14 @@ public class FakeJobApplicationRepository implements JobApplicationRepository {
     }
 
     @Override
+    public Map<ApplicationStatus, Long> countByStatus(UUID ownerId) {
+        Map<ApplicationStatus, Long> counts = new EnumMap<>(ApplicationStatus.class);
+        storage.stream().filter(a -> Objects.equals(a.getOwnerId(), ownerId))
+                .forEach(a -> counts.merge(a.getStatus(), 1L, Long::sum));
+        return counts;
+    }
+
+    @Override
     public Optional<JobApplication> findById(UUID id) {
         return storage.stream().filter(a -> Objects.equals(a.getId(), id)).findFirst();
     }
