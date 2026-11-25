@@ -43,6 +43,16 @@ public class CvDocument extends BaseEntity {
         this.extractionStatus = ExtractionStatus.PENDING;
     }
 
+    public void markExtracted(String extractedText){
+        if (extractedText == null || extractedText.isBlank()) throw new IllegalArgumentException("Extracted text is required");
+        this.extractedText = extractedText;
+        this.extractionStatus = ExtractionStatus.DONE;
+    }
+
+    public void markExtractionFailed(){
+        this.extractionStatus = ExtractionStatus.FAILED;
+    }
+
 
 
 

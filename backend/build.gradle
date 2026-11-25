@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
     implementation("software.amazon.awssdk:s3:2.59.5")
+    implementation("org.apache.pdfbox:pdfbox:3.0.8")
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
