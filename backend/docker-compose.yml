@@ -17,6 +17,18 @@ services:
       - "8333:8333"
     volumes:
       - seaweedfs_data:/data
+  backend:
+    build: .
+    container_name: jobtrail-backend
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      S3_ENDPOINT: http://seaweedfs:8333
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      - postgres
+      - seaweedfs
 volumes:
   postgres_data:
   seaweedfs_data:

@@ -37,7 +37,8 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/oauth2/google/**",
-                                "/login/**")
+                                "/login/**",
+                                "/error")
                         .permitAll()
                         .anyRequest()
                         .authenticated()).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

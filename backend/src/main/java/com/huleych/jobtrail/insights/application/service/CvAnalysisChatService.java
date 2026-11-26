@@ -17,6 +17,7 @@ import com.huleych.jobtrail.tracking.domain.entity.JobApplication;
 import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRepository;
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
+import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.core.io.Resource;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +61,7 @@ public class CvAnalysisChatService {
         if(!cvDocument.getUser().getId().equals(user.getId())) throw new NotCvDocumentOwnerException(user.getId(), cvDocument.getId());
         if(!jobApplication.getOwnerId().equals(user.getId())) throw new  NotApplicationOwnerException(user.getId(), jobApplication.getId());
         if(cvDocument.getExtractionStatus()!= ExtractionStatus.DONE) throw new IllegalStateException("Text is not extracted");
-        MatchAnalysisResult result = client.prompt().system(analysisPrompt).user(u -> u.text(userPrompt).param("jobDescription", jobApplication.getJobDescription())
+        MatchAnalysisResult result = client.prompt().options(GoogleGenAiChatOptions.builder().model("gemini-3.5-flash-lite")).system(analysisPrompt).user(u -> u.text(userPrompt).param("jobDescription", jobApplication.getJobDescription())
                 .param("cvText", cvDocument.getExtractedText())).call().entity(MatchAnalysisResult.class);
         if(result==null) throw new CvAnalysisFailedException(cvDocument.getId());
         if(result.matchScore()<0 || result.matchScore()>100) throw new CvAnalysisFailedException(cvDocument.getId());

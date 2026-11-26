@@ -10,6 +10,7 @@ import com.huleych.jobtrail.tracking.infrastructure.repository.JobApplicationRep
 import com.huleych.jobtrail.tracking.domain.exceptions.ApplicationNotFoundException;
 import com.huleych.jobtrail.tracking.domain.exceptions.NotApplicationOwnerException;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class JobAnalysisChatService {
         if(application==null) throw new ApplicationNotFoundException(applicationId);
         if(!application.getOwnerId().equals(userId)) throw new NotApplicationOwnerException(userId, applicationId);
 
-        JobAnalysisResult result = builder.prompt().user(u->u.text(analysisPrompt).param("jobDescription",application.getJobDescription())).call().entity(JobAnalysisResult.class);
+        JobAnalysisResult result = builder.prompt().options(GoogleGenAiChatOptions.builder().model("gemini-3.5-flash-lite")).user(u->u.text(analysisPrompt).param("jobDescription",application.getJobDescription())).call().entity(JobAnalysisResult.class);
         if(result==null) throw new JobAnalysisFailedException(applicationId);
 
         JobAnalysis jobAnalysis = jobAnalysisRepository.findByApplicationId(applicationId).orElse(null);
