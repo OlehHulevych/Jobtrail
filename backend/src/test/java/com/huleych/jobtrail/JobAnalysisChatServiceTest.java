@@ -20,6 +20,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -71,6 +72,7 @@ public class JobAnalysisChatServiceTest {
 
     private void stubAi(JobAnalysisResult result) {
         when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.options(any(GoogleGenAiChatOptions.Builder.class))).thenReturn(requestSpec);
         when(requestSpec.user(ArgumentMatchers.<Consumer<ChatClient.PromptUserSpec>>any())).thenReturn(requestSpec);
         when(requestSpec.call()).thenReturn(callSpec);
         when(callSpec.entity(JobAnalysisResult.class)).thenReturn(result);
