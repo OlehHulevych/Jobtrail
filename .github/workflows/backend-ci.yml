@@ -9,6 +9,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SERVER_PORT: 8080
+      POSTGRES_DB: jobtrail
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      GOOGLE_CLIENT: ci-placeholder
+      GOOGLE_SECRET: ci-placeholder
+      GITHUB_CLIENT: ci-placeholder
+      GITHUB_SECRET: ci-placeholder
+      JWT_SECRET: ci-placeholder-secret-at-least-32-bytes-long
+      GEMINI_API_KEY: ci-placeholder
+    services:
+      postgres:
+        image: postgres:17.0
+        env:
+          POSTGRES_DB: jobtrail
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     defaults:
       run:
         working-directory: backend
